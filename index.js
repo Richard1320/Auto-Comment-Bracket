@@ -29,11 +29,16 @@ program
       // console.log(indexOpen);
       // Loop & search for opening brackets
       while ((indexOpen = data.indexOf('{',indexStart)) > -1) {
+
         selector = data.substring(indexClose, indexOpen);
-        selectorLength = selector.length;
+
+        // Remove line breaks
+        selector = selector.replace(/(\r\n|\n|\r)/gm,"");
+
         console.log(selector);
-        indexClose = data.indexOf('}',indexOpen) + 1;
-        indexStart = indexOpen + selectorLength;
+
+        indexClose = data.indexOf('}',indexOpen) + 1; // Get closing bracket for next loop
+        indexStart = indexOpen + 1; // Initialize next loop after current index
       }
     }
 
