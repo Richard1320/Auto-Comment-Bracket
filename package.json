@@ -1,0 +1,18 @@
+{
+  "name": "auto-comment-bracket",
+  "version": "1.0.0",
+  "description": "Add comments to closing CSS brackets to distinguish what is actually closing. Nested selectors in SASS can be multiple levels deep which makes it hard to figure out what the parent selector is.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/run-tests.js"
+  },
+  "bin": {
+    "auto-comment-bracket": "./index.js"
+  },
+  "author": "Richard Hung <richardhung111@gmail.com> (http://www.magicmediamuse.com)",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "fs": "0.0.1-security"
+  }
+}
