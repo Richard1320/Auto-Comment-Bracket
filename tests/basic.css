@@ -1,3 +1,19 @@
 html {
   color:green;
 }
+body {
+  background:blue;
+}
+#element-id {
+  position:relative;
+}
+.element-class {
+  margin:20px;
+}
+b,
+strong {
+  font-weight:700;
+}
+#wrapper .inner {
+  padding:10px;
+}
