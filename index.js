@@ -6,12 +6,12 @@
 var fs      = require('fs');
 var program = require('commander');
 
-var openingArray   = {};
-var selector       = '';
-var indexStart     = 0; // Start position of current item
-var indexOpen      = 0; // Position of opening bracket
-var indexClose     = 0; // Position of closing bracket
-var selectorLength = 0; // String length of selector
+var cssObject  = {};
+var cssArray   = [];
+var selector   = '';
+var indexStart = 0; // Start position of current item
+var indexOpen  = 0; // Position of opening bracket
+var indexClose = 0; // Position of closing bracket
 
 program
 .arguments('<file>')
@@ -25,8 +25,7 @@ program
       return console.log(err);
     } else {
       // console.log(data);
-      // indexOpen = data.indexOf('{',indexStart);
-      // console.log(indexOpen);
+
       // Loop & search for opening brackets
       while ((indexOpen = data.indexOf('{',indexStart)) > -1) {
 
@@ -35,11 +34,23 @@ program
         // Remove line breaks
         selector = selector.replace(/(\r\n|\n|\r)/gm,"");
 
-        console.log(selector);
+        // Get closing bracket for current item
+        // Must be assigned AFTER selector but BEFORE cssObject
+        indexClose = data.indexOf('}',indexOpen) + 1;
 
-        indexClose = data.indexOf('}',indexOpen) + 1; // Get closing bracket for next loop
+        cssObject = {
+          'selector': selector,
+          'start':    indexOpen,
+          'end':      indexClose
+        };
+
+        cssArray.push(cssObject);
+
+        // console.log(selector);
+
         indexStart = indexOpen + 1; // Initialize next loop after current index
       }
+      console.log(cssArray);
     }
 
 
