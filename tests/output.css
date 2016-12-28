@@ -1,0 +1,19 @@
+html {
+  color:green;
+} /* CCC: // html */
+body {
+  background:blue;
+} /* CCC: // body */
+#element-id {
+  position:relative;
+} /* CCC: // #element-id */
+.element-class {
+  margin:20px;
+} /* CCC: // .element-class */
+b,
+strong {
+  font-weight:700;
+} /* CCC: // b,strong */
+#wrapper .inner {
+  padding:10px;
+} /* CCC: // #wrapper .inner */
