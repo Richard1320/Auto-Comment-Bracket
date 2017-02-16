@@ -24,19 +24,23 @@ if (!String.prototype.splice) {
 var fs      = require('fs');
 var program = require('commander');
 
-var cssObject  = {};
-var cssArray   = [];
-var selector   = '';
-var buffer     = '';
-var indexStart = 0; // Start position of current item
-var indexOpen  = 0; // Position of opening bracket
-var indexClose = 0; // Position of closing bracket
-var comment    = '';
-var x          = 0;
-
-
-
-
+var cssObject      = {};
+var cssArray       = [];
+var selector       = '';
+var nestedSelector = '';
+var selectorStart  = 0; // Start index of nested selector
+var buffer         = '';
+var indexStart     = 0; // Start position of current item
+var indexOpen      = 0; // Position of opening bracket
+var indexClose     = 0; // Position of closing bracket
+var comment        = '';
+var x              = 0;
+var depth          = 0;
+var nextOpen       = 0; // Next opening bracket check for nested items
+var nestedCount    = 0;
+var nestedClose    = 0;
+var endArray       = []; // End array for nested items
+var currentCode    = ''; // Current point in analyzed CSS
 
 var processFile = function(file, output) {
 
@@ -50,14 +54,52 @@ var processFile = function(file, output) {
       // Loop & search for opening brackets
       while ((indexOpen = data.indexOf('{',indexStart)) > -1) {
 
+        // Get selector
         selector = data.substring(indexClose, indexOpen);
 
         // Remove line breaks
         selector = selector.replace(/(\r\n|\n|\r)/gm,"").trim();
 
+        // Check position for next opening bracket
+        nextOpen = data.indexOf('{',indexOpen + 1);
+
         // Get closing bracket for current item
         // Must be assigned AFTER selector but BEFORE cssObject
         indexClose = data.indexOf('}',indexOpen) + 1;
+
+
+        // Check if next opening bracket is before closest closing bracket
+        // If true, we have nested styles (SASS / Media Queries)
+        if (nextOpen > -1 && nextOpen < indexClose) {
+
+          // Add 1 to the number of currently nested items
+          nestedCount++;
+
+          // Get last closing semicolon for current item
+          // Must be assigned AFTER selector but BEFORE cssObject
+          currentCode = data.substring(0, nextOpen);
+          selectorStart = currentCode.lastIndexOf(';') + 1;
+          nestedClose =  data.indexOf('}',selectorStart) + 1;
+
+          // Get selector
+          nestedSelector = data.substring(selectorStart, nextOpen);
+
+          // Remove line breaks
+          nestedSelector = nestedSelector.replace(/(\r\n|\n|\r)/gm,"").trim();
+          console.log(nestedClose);
+          cssObject = {
+            'selector': nestedSelector,
+            'start':    nextOpen,
+            'end':      nestedClose
+          };
+
+          cssArray.push(cssObject);
+
+          // console.log(nestedSelector);
+
+          // Update index close to continue root rules
+          indexClose = data.indexOf('}',nestedClose+1) + 1;
+        }
 
         cssObject = {
           'selector': selector,
@@ -100,24 +142,24 @@ var processFile = function(file, output) {
           });
         });
       } else {
-          console.log(data);
-        }
-
+        console.log(data);
       }
 
-    });
+    }
 
-  }; // End process file
+  });
 
-  program
-  .arguments('<file>')
-  .option('-o, --output <filename>', 'The output file to be written')
-  // .option('-u, --username <username>', 'The user to authenticate as')
-  // .option('-p, --password <password>', 'The user\'s password')
-  .action(function(file) {
-    processFile(file,program.output);
-    // console.log(program.output);
-    //  console.log('user: %s pass: %s file: %s',
-    //      program.username, program.password, file);
-  })
-  .parse(process.argv);
+}; // End process file
+
+program
+.arguments('<file>')
+.option('-o, --output <filename>', 'The output file to be written')
+// .option('-u, --username <username>', 'The user to authenticate as')
+// .option('-p, --password <password>', 'The user\'s password')
+.action(function(file) {
+  processFile(file,program.output);
+  // console.log(program.output);
+  //  console.log('user: %s pass: %s file: %s',
+  //      program.username, program.password, file);
+})
+.parse(process.argv);

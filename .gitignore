@@ -1,3 +1,4 @@
 # Ignore Rules
 
 node_modules
+tests/output.scss
