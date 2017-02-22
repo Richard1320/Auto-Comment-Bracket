@@ -41,6 +41,7 @@ var nestedCount    = 0;
 var nestedClose    = 0;
 var endArray       = []; // End array for nested items
 var currentCode    = ''; // Current point in analyzed CSS
+var hasNested      = false;
 
 var processFile = function(file, output) {
 
@@ -53,6 +54,8 @@ var processFile = function(file, output) {
 
       // Loop & search for opening brackets
       while ((indexOpen = data.indexOf('{',indexStart)) > -1) {
+        nestedCount = 0;
+        hasNested = false;
 
         // Get selector
         selector = data.substring(indexClose, indexOpen);
@@ -71,9 +74,9 @@ var processFile = function(file, output) {
         // Check if next opening bracket is before closest closing bracket
         // If true, we have nested styles (SASS / Media Queries)
         if (nextOpen > -1 && nextOpen < indexClose) {
-
           // Add 1 to the number of currently nested items
           nestedCount++;
+          hasNested = true;
 
           // Get last closing semicolon for current item
           // Must be assigned AFTER selector but BEFORE cssObject
@@ -86,7 +89,7 @@ var processFile = function(file, output) {
 
           // Remove line breaks
           nestedSelector = nestedSelector.replace(/(\r\n|\n|\r)/gm,"").trim();
-          console.log(nestedClose);
+          // console.log(nestedSelector);
           cssObject = {
             'selector': nestedSelector,
             'start':    nextOpen,
@@ -99,7 +102,8 @@ var processFile = function(file, output) {
 
           // Update index close to continue root rules
           indexClose = data.indexOf('}',nestedClose+1) + 1;
-        }
+        } // End nested check
+
 
         cssObject = {
           'selector': selector,
@@ -111,12 +115,17 @@ var processFile = function(file, output) {
 
         // console.log(selector);
 
-        indexStart = indexOpen + 1; // Initialize next loop after current index
+        // Initialize next loop after current index
+        // Check if there are any nested items to skip over
+        if (hasNested) {
+          indexStart = nextOpen + 1; // Use nested open for start of next loop
+        } else {
+          indexStart = indexOpen + 1; // Use index (root) open for start of next loop
+        }
       }
 
       // Reverse array before processing to prevent position leapfrogging
       cssArray.reverse();
-      // console.log(cssArray);
 
       // Loop through & create new CSS file
       for(x = 0; x < cssArray.length; x++) {
