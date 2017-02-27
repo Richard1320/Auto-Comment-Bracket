@@ -24,24 +24,61 @@ if (!String.prototype.splice) {
 var fs      = require('fs');
 var program = require('commander');
 
-var cssObject      = {};
+var cssObject      = {}; // Object to push into array
 var cssArray       = [];
-var selector       = '';
-var nestedSelector = '';
-var selectorStart  = 0; // Start index of nested selector
+var rootSelector   = '';
 var buffer         = '';
-var indexStart     = 0; // Start position of current item
-var indexOpen      = 0; // Position of opening bracket
-var indexClose     = 0; // Position of closing bracket
+var rootStart      = 0; // Start position of current root item
+var rootOpen       = 0; // Position of opening bracket
+var rootClose      = 0; // Position of closing bracket
 var comment        = '';
 var x              = 0;
 var depth          = 0;
-var nextOpen       = 0; // Next opening bracket check for nested items
-var nestedCount    = 0;
+var nestedOpen     = 0;
 var nestedClose    = 0;
-var endArray       = []; // End array for nested items
 var currentCode    = ''; // Current point in analyzed CSS
 var hasNested      = false;
+
+var getNestedUntilClose = function(data,index,nestedArray) {
+  var nextOpen  = data.indexOf('{',index+1);
+  var nextClose = data.indexOf('}',index+1);
+  var lastColon = 0;
+  var lastOpen  = 0;
+  var lastClose = 0;
+  var nestedSelector = '';
+  var nestedStart    = 0; // Start index of nested selector
+
+  // Loop through deep nested items
+  while (nextOpen > -1 && nextOpen < nextClose) {
+
+    // Get last semicolon or open bracket for start current item
+    // Check for opening bracket in case parent is empty
+    // Must be assigned AFTER selector but BEFORE cssObject
+    currentCode = data.substring(0, nextOpen);
+    lastColon   = currentCode.lastIndexOf(';');
+    lastOpen    = currentCode.lastIndexOf('{');
+    lastClose   = currentCode.lastIndexOf('}');
+    nestedStart = Math.max(lastColon, lastOpen, lastClose) + 1;
+
+
+    // Get selector
+    nestedSelector = data.substring(nestedStart, nextOpen);
+
+    // Remove line breaks
+    nestedSelector = nestedSelector.replace(/(\r\n|\n|\r)/gm,"").trim();
+
+    cssObject = {
+      'selector': nestedSelector,
+      'start':    nextOpen,
+    };
+    console.log(cssObject);
+    nestedArray.push(cssObject);
+
+    nextOpen = data.indexOf('{',nextOpen+1);
+  }
+  console.log('loop end');
+  return nestedArray;
+}; // End get nested until close
 
 var processFile = function(file, output) {
 
@@ -50,77 +87,80 @@ var processFile = function(file, output) {
     if (err) {
       return console.log(err);
     } else {
-      // console.log(data);
+      var nestedArray = []; // Array for nested item selectors
+      var nextOpen       = 0; // Next opening bracket check for nested items
+      var nextClose      = 0; // Next closing bracket check for nested items
 
       // Loop & search for opening brackets
-      while ((indexOpen = data.indexOf('{',indexStart)) > -1) {
-        nestedCount = 0;
+      while ((rootOpen = data.indexOf('{',rootStart)) > -1) {
         hasNested = false;
-
         // Get selector
-        selector = data.substring(indexClose, indexOpen);
+        rootSelector = data.substring(rootClose, rootOpen);
 
         // Remove line breaks
-        selector = selector.replace(/(\r\n|\n|\r)/gm,"").trim();
+        rootSelector = rootSelector.replace(/(\r\n|\n|\r)/gm,"").trim();
 
-        // Check position for next opening bracket
-        nextOpen = data.indexOf('{',indexOpen + 1);
+        cssObject = {
+          'selector': rootSelector,
+          'start':    rootOpen,
+        };
+        nestedArray.push(cssObject);
 
-        // Get closing bracket for current item
+        // Check position for next opening and closing bracket
+        nextOpen  = data.indexOf('{',rootOpen + 1);
+
+        // Set closing bracket for current item
         // Must be assigned AFTER selector but BEFORE cssObject
-        indexClose = data.indexOf('}',indexOpen) + 1;
-
+        // May be overwritten if nested items are found
+        rootClose = data.indexOf('}',rootOpen + 1) + 1;
 
         // Check if next opening bracket is before closest closing bracket
         // If true, we have nested styles (SASS / Media Queries)
-        if (nextOpen > -1 && nextOpen < indexClose) {
-          // Add 1 to the number of currently nested items
-          nestedCount++;
+        if (nextOpen > -1 && nextOpen < rootClose) {
           hasNested = true;
+          nestedArray = getNestedUntilClose(data,rootOpen,nestedArray);
+          nextClose = rootClose;
 
-          // Get last closing semicolon for current item
-          // Must be assigned AFTER selector but BEFORE cssObject
-          currentCode = data.substring(0, nextOpen);
-          selectorStart = currentCode.lastIndexOf(';') + 1;
-          nestedClose =  data.indexOf('}',selectorStart) + 1;
+          while (nextClose > -1) {
 
-          // Get selector
-          nestedSelector = data.substring(selectorStart, nextOpen);
 
-          // Remove line breaks
-          nestedSelector = nestedSelector.replace(/(\r\n|\n|\r)/gm,"").trim();
-          // console.log(nestedSelector);
-          cssObject = {
-            'selector': nestedSelector,
-            'start':    nextOpen,
-            'end':      nestedClose
-          };
+            cssObject = nestedArray.pop();
+            cssObject.end = nextClose+1;
 
-          cssArray.push(cssObject);
+            cssArray.push(cssObject);
 
-          // console.log(nestedSelector);
+            nestedArray = getNestedUntilClose(data,nextClose,nestedArray);
+            nextClose = data.indexOf('}',nextClose+1);
+
+            if (nestedArray.length <= 1) {
+              console.log('break');
+              break;
+            }
+
+          }
 
           // Update index close to continue root rules
-          indexClose = data.indexOf('}',nestedClose+1) + 1;
+          rootClose = nextClose;
+
         } // End nested check
 
-
-        cssObject = {
-          'selector': selector,
-          'start':    indexOpen,
-          'end':      indexClose
-        };
+        cssObject = nestedArray.pop();
+        cssObject.end = rootClose;
+        // cssObject = {
+        //   'selector': rootSelector,
+        //   'start':    rootOpen,
+        //   'end':      rootClose
+        // };
 
         cssArray.push(cssObject);
 
-        // console.log(selector);
 
         // Initialize next loop after current index
         // Check if there are any nested items to skip over
         if (hasNested) {
-          indexStart = nextOpen + 1; // Use nested open for start of next loop
+          rootStart = nextOpen + 1; // Use nested open for start of next loop
         } else {
-          indexStart = indexOpen + 1; // Use index (root) open for start of next loop
+          rootStart = rootOpen + 1; // Use root open for start of next loop
         }
       }
 
