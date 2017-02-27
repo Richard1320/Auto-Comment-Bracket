@@ -24,51 +24,39 @@ if (!String.prototype.splice) {
 var fs      = require('fs');
 var program = require('commander');
 
-var cssArray       = [];
-var rootSelector   = '';
-var buffer         = '';
-var rootStart      = 0; // Start position of current root item
-var rootOpen       = 0; // Position of opening bracket
-var rootClose      = 0; // Position of closing bracket
-var comment        = '';
-var x              = 0;
-var depth          = 0;
-var nestedOpen     = 0;
-var nestedClose    = 0;
-var currentCode    = ''; // Current point in analyzed CSS
-var hasNested      = false;
 
 var getNestedUntilClose = function(data,index,nestedArray) {
-  var nextOpen  = data.indexOf('{',index+1);
-  var nextClose = data.indexOf('}',index+1);
-  var lastColon = 0;
-  var lastOpen  = 0;
-  var lastClose = 0;
-  var nestedSelector = '';
-  var nestedStart    = 0; // Start index of nested selector
-  var cssObject      = {}; // Object to push into array
+  var nextOpen      = data.indexOf('{',index+1);
+  var nextClose     = data.indexOf('}',index+1);
+  var lastColon     = 0; // Last semicolon before selector start
+  var lastOpen      = 0; // Last opening bracket before selector start
+  var lastClose     = 0; // Last closing bracket before selector start
+  var selector      = '';
+  var selectorStart = 0; // Start index of nested selector
+  var cssObject     = {}; // Object to push into array
+  var currentCode   = ''; // Code up to current point in analyzed CSS
 
-  // Loop through deep nested items
+  // Loop through nested items
   while (nextOpen > -1 && nextOpen < nextClose) {
 
     // Get last semicolon or open bracket for start current item
     // Check for opening bracket in case parent is empty
     // Must be assigned AFTER selector but BEFORE cssObject
-    currentCode = data.substring(0, nextOpen);
-    lastColon   = currentCode.lastIndexOf(';');
-    lastOpen    = currentCode.lastIndexOf('{');
-    lastClose   = currentCode.lastIndexOf('}');
-    nestedStart = Math.max(lastColon, lastOpen, lastClose) + 1;
+    currentCode   = data.substring(0, nextOpen);
+    lastColon     = currentCode.lastIndexOf(';');
+    lastOpen      = currentCode.lastIndexOf('{');
+    lastClose     = currentCode.lastIndexOf('}');
+    selectorStart = Math.max(lastColon, lastOpen, lastClose) + 1;
 
 
     // Get selector
-    nestedSelector = data.substring(nestedStart, nextOpen);
+    selector = data.substring(selectorStart, nextOpen);
 
     // Remove line breaks
-    nestedSelector = nestedSelector.replace(/(\r\n|\n|\r)/gm,"").trim();
+    selector = selector.replace(/(\r\n|\n|\r)/gm,"").trim();
 
     cssObject = {
-      'selector': nestedSelector,
+      'selector': selector,
       'start':    nextOpen,
     };
     nestedArray.push(cssObject);
@@ -86,9 +74,14 @@ var processFile = function(file, output) {
       return console.log(err);
     } else {
       var nestedArray = getNestedUntilClose(data,0,[]); // Get first set of items
-      var nextClose      = data.indexOf('}'); // Next closing bracket check for nested items
-      var cssObject      = {}; // Object to push into array
+      var nextClose   = data.indexOf('}'); // First closing bracket check
+      var cssObject   = {}; // Object to push into array
+      var cssArray    = []; // Array holding all selectors
+      var buffer      = '';
+      var comment     = '';
+      var x           = 0;
 
+      // Loop through all
       while (nextClose > -1) {
 
         cssObject = nestedArray.pop();
