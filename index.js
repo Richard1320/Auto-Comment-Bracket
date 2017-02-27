@@ -71,12 +71,10 @@ var getNestedUntilClose = function(data,index,nestedArray) {
       'selector': nestedSelector,
       'start':    nextOpen,
     };
-    console.log(cssObject);
     nestedArray.push(cssObject);
 
     nextOpen = data.indexOf('{',nextOpen+1);
   }
-  console.log('loop end');
   return nestedArray;
 }; // End get nested until close
 
@@ -123,7 +121,6 @@ var processFile = function(file, output) {
 
           while (nextClose > -1) {
 
-
             cssObject = nestedArray.pop();
             cssObject.end = nextClose+1;
 
@@ -133,7 +130,6 @@ var processFile = function(file, output) {
             nextClose = data.indexOf('}',nextClose+1);
 
             if (nestedArray.length <= 1) {
-              console.log('break');
               break;
             }
 
@@ -145,7 +141,7 @@ var processFile = function(file, output) {
         } // End nested check
 
         cssObject = nestedArray.pop();
-        cssObject.end = rootClose;
+        cssObject.end = rootClose+1;
         // cssObject = {
         //   'selector': rootSelector,
         //   'start':    rootOpen,
@@ -158,9 +154,9 @@ var processFile = function(file, output) {
         // Initialize next loop after current index
         // Check if there are any nested items to skip over
         if (hasNested) {
-          rootStart = nextOpen + 1; // Use nested open for start of next loop
+          rootStart = nextClose + 1; // Use nested open for start of next loop
         } else {
-          rootStart = rootOpen + 1; // Use root open for start of next loop
+          rootStart = rootClose + 1; // Use root open for start of next loop
         }
       }
 
