@@ -94,7 +94,7 @@ var processFile = function(file, output) {
         hasNested = false;
         // Get selector
         rootSelector = data.substring(rootClose, rootOpen);
-
+        
         // Remove line breaks
         rootSelector = rootSelector.replace(/(\r\n|\n|\r)/gm,"").trim();
 
@@ -117,7 +117,7 @@ var processFile = function(file, output) {
         if (nextOpen > -1 && nextOpen < rootClose) {
           hasNested = true;
           nestedArray = getNestedUntilClose(data,rootOpen,nestedArray);
-          nextClose = rootClose;
+          nextClose = rootClose - 1;
 
           while (nextClose > -1) {
 
@@ -136,12 +136,12 @@ var processFile = function(file, output) {
           }
 
           // Update index close to continue root rules
-          rootClose = nextClose;
+          rootClose = nextClose + 1;
 
         } // End nested check
 
         cssObject = nestedArray.pop();
-        cssObject.end = rootClose+1;
+        cssObject.end = rootClose;
         // cssObject = {
         //   'selector': rootSelector,
         //   'start':    rootOpen,
