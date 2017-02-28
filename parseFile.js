@@ -3,6 +3,7 @@
 'use strict';
 
 var fs     = require('fs');
+var undo   = require('./undo.js');
 var nested = require('./nested.js');
 
 if (!String.prototype.splice) {
@@ -22,8 +23,6 @@ if (!String.prototype.splice) {
     return this.slice(0, start) + newSubStr + this.slice(start + Math.abs(delCount));
   };
 }
-
-
 exports.processFile = function(file, output) {
 
   // Open & read file
@@ -31,6 +30,10 @@ exports.processFile = function(file, output) {
     if (err) {
       return console.log(err);
     } else {
+
+      // Remove comemnts from previous executions
+      data = undo.removeComments(data,' /* CCC: // ');
+
       var nestedArray = nested.getNestedUntilClose(data,0,[]); // Get first set of items
       var nextClose   = data.indexOf('}'); // First closing bracket check
       var cssObject   = {}; // Object to push into array

@@ -2,6 +2,8 @@
 
 'use strict';
 
+var undo = require('./undo.js');
+
 exports.getNestedUntilClose = function(data,index,nestedArray) {
   var nextOpen      = data.indexOf('{',index+1);
   var nextClose     = data.indexOf('}',index+1);
@@ -29,8 +31,12 @@ exports.getNestedUntilClose = function(data,index,nestedArray) {
     // Get selector
     selector = data.substring(selectorStart, nextOpen);
 
+    // Ignore any comments
+    selector = undo.removeComments(selector);
+
     // Remove line breaks
-    selector = selector.replace(/(\r\n|\n|\r)/gm,"").trim();
+    // selector = selector.replace(/(\r\n|\n|\r)/gm," ").trim();
+    selector = selector.replace(/\s\s+/g, ' ').trim();
 
     cssObject = {
       'selector': selector,
