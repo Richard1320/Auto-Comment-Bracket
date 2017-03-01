@@ -23,6 +23,31 @@ if (!String.prototype.splice) {
     return this.slice(0, start) + newSubStr + this.slice(start + Math.abs(delCount));
   };
 }
+
+exports.writeFile = function(data, output) {
+  var buffer = '';
+
+  if (output) {
+    buffer = new Buffer(data);
+
+    fs.open(output, 'w', function(err, fd) {
+      if (err) {
+        throw 'error opening file: ' + err;
+      }
+
+      fs.write(fd, buffer, 0, buffer.length, null, function(err) {
+        if (err) throw 'error writing file: ' + err;
+        fs.close(fd, function() {
+          console.log('file written');
+        })
+      });
+    });
+  } else {
+    console.log(data);
+  }
+
+}; // End write file
+
 exports.processFile = function(file, output) {
 
   // Open & read file
@@ -38,7 +63,6 @@ exports.processFile = function(file, output) {
       var nextClose   = data.indexOf('}'); // First closing bracket check
       var cssObject   = {}; // Object to push into array
       var cssArray    = []; // Array holding all selectors
-      var buffer      = '';
       var comment     = '';
       var x           = 0;
 
@@ -66,24 +90,33 @@ exports.processFile = function(file, output) {
         data = data.splice(cssObject.end, 0, comment);
       }
 
-      if (output) {
-        buffer = new Buffer(data);
-
-        fs.open(output, 'w', function(err, fd) {
-          if (err) {
-            throw 'error opening file: ' + err;
-          }
-
-          fs.write(fd, buffer, 0, buffer.length, null, function(err) {
-            if (err) throw 'error writing file: ' + err;
-            fs.close(fd, function() {
-              console.log('file written');
-            })
-          });
-        });
-      } else {
-        console.log(data);
+      // Overwrite original file if no output file specified
+      if (!output) {
+        output = file;
       }
+
+      exports.writeFile(data,output);
+    }
+
+  });
+
+}; // End process file
+exports.undoFile = function(file, output) {
+
+  // Open & read file
+  fs.readFile(file, 'utf8', function (err,data) {
+    if (err) {
+      return console.log(err);
+    } else {
+      // Overwrite original file if no output file specified
+      if (!output) {
+        output = file;
+      }
+
+      // Remove comemnts from previous executions
+      data = undo.removeComments(data,' /* CCC: // ');
+
+      exports.writeFile(data,output);
 
     }
 

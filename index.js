@@ -10,10 +10,14 @@ var parseFile = require('./parseFile.js');
 program
 .arguments('<file>')
 .option('-o, --output <filename>', 'The output file to be written')
-// .option('-u, --username <username>', 'The user to authenticate as')
+.option('-u, --undo', 'Remove comments added using this module')
 // .option('-p, --password <password>', 'The user\'s password')
 .action(function(file) {
-  parseFile.processFile(file,program.output);
+  if (program.undo) {
+    parseFile.undoFile(file,program.output);
+  } else {
+    parseFile.processFile(file,program.output);
+  }
   // console.log(program.output);
   //  console.log('user: %s pass: %s file: %s',
   //      program.username, program.password, file);

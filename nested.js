@@ -27,7 +27,6 @@ exports.getNestedUntilClose = function(data,index,nestedArray) {
     lastClose     = currentCode.lastIndexOf('}');
     selectorStart = Math.max(lastColon, lastOpen, lastClose) + 1;
 
-
     // Get selector
     selector = data.substring(selectorStart, nextOpen);
 
