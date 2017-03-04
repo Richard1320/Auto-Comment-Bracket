@@ -125,7 +125,7 @@ exports.undoFile = function(file, output) {
       }
 
       // Remove comemnts from previous executions
-      data = undo.removeComments(data,' /* CCC: // ');
+      data = comments.removeComments(data,' /* CCC: // ');
 
       exports.writeFile(data,output);
 
