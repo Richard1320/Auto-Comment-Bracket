@@ -2,9 +2,9 @@
 
 'use strict';
 
-var fs     = require('fs');
-var undo   = require('./undo.js');
-var nested = require('./nested.js');
+var fs       = require('fs');
+var comments = require('./comments.js');
+var nested   = require('./nested.js');
 
 if (!String.prototype.splice) {
   /**
@@ -57,24 +57,35 @@ exports.processFile = function(file, output) {
     } else {
 
       // Remove comemnts from previous executions
-      data = undo.removeComments(data,' /* CCC: // ');
+      data = comments.removeComments(data,' /* CCC: // ');
 
-      var nestedArray = nested.getNestedUntilClose(data,0,[]); // Get first set of items
-      var nextClose   = data.indexOf('}'); // First closing bracket check
-      var cssObject   = {}; // Object to push into array
-      var cssArray    = []; // Array holding all selectors
-      var comment     = '';
-      var x           = 0;
+      var commentsArray = comments.commentsArray(data);
+      var nestedArray   = nested.getNestedUntilClose(data,0,[],commentsArray); // Get first set of items
+      var nextClose     = data.indexOf('}'); // First closing bracket check
+      var cssObject     = {}; // Object to push into array
+      var cssArray      = []; // Array holding all selectors
+      var comment       = '';
+      var x             = 0;
 
-      // Loop through all
+      // Keep looking if bracket is in array
+      while (comments.checkRanges(nextClose,commentsArray)) {
+        nextClose = data.indexOf('}',nextClose+1);
+      }
+
+      // Loop through all closing brackets
       while (nextClose > -1) {
 
+        // If bracket is inside a comment, move onto next item
+        if (comments.checkRanges(nextClose,commentsArray)) {
+          nextClose = data.indexOf('}',nextClose+1);
+          // nestedArray = nested.getNestedUntilClose(data,nextClose,nestedArray,commentsArray);
+          continue;
+        }
         cssObject = nestedArray.pop();
         cssObject.end = nextClose+1;
 
         cssArray.push(cssObject);
-
-        nestedArray = nested.getNestedUntilClose(data,nextClose,nestedArray);
+        nestedArray = nested.getNestedUntilClose(data,nextClose+1,nestedArray,commentsArray);
         nextClose = data.indexOf('}',nextClose+1);
         // console.log(nestedArray);
       }

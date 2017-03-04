@@ -2,9 +2,9 @@
 
 'use strict';
 
-var undo = require('./undo.js');
+var comments = require('./comments.js');
 
-exports.getNestedUntilClose = function(data,index,nestedArray) {
+exports.getNestedUntilClose = function(data,index,nestedArray,commentsArray) {
   var nextOpen      = data.indexOf('{',index+1);
   var nextClose     = data.indexOf('}',index+1);
   var lastColon     = 0; // Last semicolon before selector start
@@ -14,9 +14,21 @@ exports.getNestedUntilClose = function(data,index,nestedArray) {
   var selectorStart = 0; // Start index of nested selector
   var cssObject     = {}; // Object to push into array
   var currentCode   = ''; // Code up to current point in analyzed CSS
+  var commentStart  = 0; // Position of comment start
+
+  // Keep looking if bracket is in array
+  while (comments.checkRanges(nextClose,commentsArray)) {
+    nextClose = data.indexOf('}',nextClose+1);
+  }
 
   // Loop through nested items
   while (nextOpen > -1 && nextOpen < nextClose) {
+
+    // If bracket is inside a comment, move onto next item
+    if (comments.checkRanges(nextOpen,commentsArray)) {
+      nextOpen = data.indexOf('{',nextOpen+1);
+      continue;
+    }
 
     // Get last semicolon or open bracket for start current item
     // Check for opening bracket in case parent is empty
@@ -27,11 +39,21 @@ exports.getNestedUntilClose = function(data,index,nestedArray) {
     lastClose     = currentCode.lastIndexOf('}');
     selectorStart = Math.max(lastColon, lastOpen, lastClose) + 1;
 
+    // Use previous close if close is inside a bracket
+    if (comments.checkRanges(selectorStart,commentsArray)) {
+      commentStart  = currentCode.lastIndexOf('/*');
+      currentCode   = data.substring(0, commentStart);
+      lastColon     = currentCode.lastIndexOf(';');
+      lastOpen      = currentCode.lastIndexOf('{');
+      lastClose     = currentCode.lastIndexOf('}');
+      selectorStart = Math.max(lastColon, lastOpen, lastClose) + 1;
+    }
+
     // Get selector
     selector = data.substring(selectorStart, nextOpen);
 
     // Ignore any comments
-    selector = undo.removeComments(selector);
+    selector = comments.removeComments(selector);
 
     // Remove line breaks
     // selector = selector.replace(/(\r\n|\n|\r)/gm," ").trim();
