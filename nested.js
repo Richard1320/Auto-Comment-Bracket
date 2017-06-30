@@ -56,8 +56,10 @@ exports.getNestedUntilClose = function(data,index,nestedArray,commentsArray) {
     selector = comments.removeComments(selector);
 
     // Remove line breaks
-    // selector = selector.replace(/(\r\n|\n|\r)/gm," ").trim();
-    selector = selector.replace(/\s\s+/g, ' ').trim();
+    selector = selector.replace(/(\r\n|\n|\r)/gm," ").trim();
+
+    // Concatenate spaces
+    selector = selector.replace(/\s\s+/g, ' ');
 
     cssObject = {
       'selector': selector,
