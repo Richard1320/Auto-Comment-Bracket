@@ -57,7 +57,7 @@ exports.processFile = function(file, output) {
     } else {
 
       // Remove comemnts from previous executions
-      data = comments.removeComments(data,' /* CCC: // ');
+      data = comments.removeComments(data,' /* ACB: // ');
 
       var commentsArray = comments.commentsArray(data);
       var nestedArray   = nested.getNestedUntilClose(data,0,[],commentsArray); // Get first set of items
@@ -96,7 +96,7 @@ exports.processFile = function(file, output) {
       // Loop through & create new CSS file
       for(x = 0; x < cssArray.length; x++) {
         cssObject = cssArray[x];
-        comment = ' /* CCC: // '+ cssObject.selector +' */';
+        comment = ' /* ACB: // '+ cssObject.selector +' */';
         // console.log(cssObject);
         data = data.splice(cssObject.end, 0, comment);
       }
@@ -125,7 +125,7 @@ exports.undoFile = function(file, output) {
       }
 
       // Remove comemnts from previous executions
-      data = comments.removeComments(data,' /* CCC: // ');
+      data = comments.removeComments(data,' /* ACB: // ');
 
       exports.writeFile(data,output);
 
