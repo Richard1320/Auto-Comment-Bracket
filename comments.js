@@ -9,11 +9,13 @@ if (!String.prototype.cut) {
 }
 
 // Remove comments from string
-exports.removeComments = function(data,commentPrefix) {
+exports.removeComments = function(data,commentPrefix,commentSuffix) {
   if (!commentPrefix) {
     commentPrefix = '/*';
   }
-  var commentSuffix       = '*/';
+  if (!commentSuffix) {
+    commentSuffix = '*/';
+  }
   var commentSuffixLength = commentSuffix.length;
   var commentStart        = data.indexOf(commentPrefix,commentStart);
   var commentEnd          = -1;

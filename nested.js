@@ -52,8 +52,11 @@ exports.getNestedUntilClose = function(data,index,nestedArray,commentsArray) {
     // Get selector
     selector = data.substring(selectorStart, nextOpen);
 
-    // Ignore any comments
+    // Remove /* */ comments
     selector = comments.removeComments(selector);
+
+    // Remove double-slash comments
+    selector = comments.removeComments(selector,'//','\n');
 
     // Remove line breaks
     selector = selector.replace(/(\r\n|\n|\r)/gm," ").trim();
