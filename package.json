@@ -7,7 +7,7 @@
     "test": "node test/run-tests.js"
   },
   "bin": {
-    "auto-comment-bracket": "./index.js"
+    "auto-comment-bracket": "./src/index.js"
   },
   "author": "Richard Hung <richardhung111@gmail.com> (http://www.magicmediamuse.com)",
   "license": "ISC",
