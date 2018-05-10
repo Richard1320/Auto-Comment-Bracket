@@ -38,7 +38,7 @@ exports.writeFile = function(data, output) {
       fs.write(fd, buffer, 0, buffer.length, null, function(err) {
         if (err) throw 'error writing file: ' + err;
         fs.close(fd, function() {
-          console.log('file written');
+          console.log('file written to '+ output);
         })
       });
     });
@@ -47,8 +47,7 @@ exports.writeFile = function(data, output) {
   }
 
 }; // End write file
-
-exports.processFile = function(file, output) {
+exports.applyBrackets = function(file, output) {
 
   // Open & read file
   fs.readFile(file, 'utf8', function (err,data) {
@@ -56,7 +55,7 @@ exports.processFile = function(file, output) {
       return console.log(err);
     } else {
 
-      // Remove comemnts from previous executions
+      // Remove comments from previous executions
       data = comments.removeComments(data,' /* ACB: // ');
 
       var commentsArray = comments.commentsArray(data);
@@ -111,7 +110,7 @@ exports.processFile = function(file, output) {
 
   });
 
-}; // End process file
+}; // End apply brackets
 exports.undoFile = function(file, output) {
 
   // Open & read file
@@ -133,4 +132,12 @@ exports.undoFile = function(file, output) {
 
   });
 
+}; // End process file
+
+exports.processFile = function(file, program) {
+  if (program.undo) {
+    exports.undoFile(file,program.output);
+  } else {
+    exports.applyBrackets(file,program.output);
+  }
 }; // End process file
