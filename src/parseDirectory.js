@@ -12,6 +12,10 @@ exports.loopDir = function(path, program) {
       process.exit( 1 );
     }
 
+    let lastChar = path.substr(-1); // Selects the last character
+    if (lastChar != '/') {          // If the last character is not a slash
+      path = path + '/';            // Append a slash to it.
+    }
     // console.log(path);
 
   } );
