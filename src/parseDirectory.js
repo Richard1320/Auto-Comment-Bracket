@@ -50,6 +50,16 @@ exports.loopDir = function(path, program) {
         }
 
 
+        // Check if current item is directory and recursive option is enabled
+        if (stats.isDirectory() && program.recursive) {
+          // console.log(options.output);
+          if (!fs.existsSync(options.output)){
+            fs.mkdirSync(options.output);
+          }
+          exports.loopDir(filepath,options);
+        }
+
+
         // console.log(`Is file: ${stats.isFile()}`);
         // console.log(`Is directory: ${stats.isDirectory()}`);
         // console.log(`Is symbolic link: ${stats.isSymbolicLink()}`);
