@@ -18,6 +18,10 @@ exports.loopDir = function(path, program) {
     }
     // console.log(path);
 
+    files.forEach( function( file, index ) {
+      var filepath = path + file;
+
+    } );
   } );
 
 }; // end loop directory
