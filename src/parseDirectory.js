@@ -27,6 +27,18 @@ exports.loopDir = function(path, program) {
           return console.log(err); //Handle error
         }
 
+        let options = Object.assign({}, program);
+
+        // Check if output directory is defined
+        if (program.output) {
+          let outputDir = program.output;
+          let lastChar  = outputDir.substr(-1); // Selects the last character
+          if (lastChar != '/') {               // If the last character is not a slash
+            outputDir = outputDir + '/';       // Append a slash to it.
+          }
+          options.output = outputDir + file;
+        }
+
 
         // console.log(`Is file: ${stats.isFile()}`);
         // console.log(`Is directory: ${stats.isDirectory()}`);
