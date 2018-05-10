@@ -39,6 +39,16 @@ exports.loopDir = function(path, program) {
           options.output = outputDir + file;
         }
 
+        // Check if current item is a file
+        if (stats.isFile()) {
+          // Check if file is CSS or SCSS extension
+          let extension = filepath.split('.').pop().toLowerCase();
+          if (extension == 'css' || extension == 'scss') {
+            parseFile.processFile(filepath,options);
+          }
+          // console.log(extension);
+        }
+
 
         // console.log(`Is file: ${stats.isFile()}`);
         // console.log(`Is directory: ${stats.isDirectory()}`);
