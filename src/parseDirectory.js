@@ -37,6 +37,8 @@ exports.loopDir = function(path, program) {
             outputDir = outputDir + '/';       // Append a slash to it.
           }
           options.output = outputDir + file;
+        } else {
+          options.output = path + file;
         }
 
         // Check if current item is a file
