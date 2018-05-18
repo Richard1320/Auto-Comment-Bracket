@@ -19,7 +19,7 @@ try {
 
 
 function checksumFile(path) {
-  return new Promise((resolve, reject) => {
+  return new Promise(function(resolve, reject) {
     let hash = crypto.createHash('md5');
     let stream = fs.createReadStream(path);
     stream.on('error', err => reject(err));
@@ -29,61 +29,73 @@ function checksumFile(path) {
 }
 
 
-function runCommandAndTestFile(command,testFile,compareFile,done) {
-  checksumFile(compareFile).then(hash_expected => {
+function runCommandAndtestPath(done,command,testPath,compareFile,outputFile) {
 
+  if (!outputFile) {
+    outputFile = testPath;
+  }
+  var promiseCompare = checksumFile(compareFile);
+  var promiseTest    = new Promise(function(resolve, reject) {
     exec(command, function callback(error, stdout, stderr){
-      checksumFile(testFile).then(hash_test => {
-        if (hash_expected == hash_test) {
-          done();
-        } else {
-          done('Files do not match.');
-        }
+      checksumFile(outputFile).then(hash_test => {
+        resolve(hash_test);
       }).catch(err => {
-        // throw new Error(err)
-        done(err);
+        reject(err);
       });
-
     });
+  });
 
-  }).catch(err => {
-    // throw new Error(err)
-    done(err);
+
+  Promise.all([promiseCompare, promiseTest]).then(function(values) {
+    // console.log(values);
+    if (values[0] == values[1]) {
+      done();
+    } else {
+      done('Files do not match.');
+    }
   });
 
 }
 
-// Test single file replace
 describe('Auto Comment Bracket', function() {
-  describe('Test single file replace', function() {
-    it('should return file with applied comments', function (done) {
-      let testFile    = './test/single_file/file_test.scss';
+  describe('Test single file', function() {
+    // Test single file replace
+    it('should return overwritten file with applied comments', function (done) {
+      let testPath    = './test/single_file/file_test.scss';
+      let outputFile  = './test/single_file/file_test.scss';
       let compareFile = './test/single_file/file_has_comments.scss';
-      let command     = 'auto-comment-bracket '+ testFile;
-      runCommandAndTestFile(command,testFile,compareFile,done);
+      let command     = 'auto-comment-bracket '+ testPath;
+      runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
     });
-  });
+
+    // test single file replace undo
+    it('should return overwritten file back to its original state', function (done) {
+      let testPath    = './test/single_file/file_test.scss';
+      let outputFile  = './test/single_file/file_test.scss';
+      let compareFile = './test/single_file/file_no_comments.scss';
+      let command     = 'auto-comment-bracket '+ testPath +' -u';
+      runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
+    });
+
+    // Test single file new output
+    it('should return a new file with applied comments', function (done) {
+      let testPath    = './test/single_file/file_test.scss';
+      let outputFile  = './test/single_file/file_output.scss';
+      let compareFile = './test/single_file/file_has_comments.scss';
+      let command     = 'auto-comment-bracket '+ testPath +' -o '+ outputFile;
+      runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
+    });
+
+    // test single file new output undo
+    it('should return a new file back to its original state', function (done) {
+      let testPath    = './test/single_file/file_test.scss';
+      let outputFile  = './test/single_file/file_output.scss';
+      let compareFile = './test/single_file/file_no_comments.scss';
+      let command     = 'auto-comment-bracket '+ testPath +' -u -o '+ outputFile;
+      runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
+    });
+  }); // End file test
+
+
+
 });
-
-
-
-
-
-
-// test single file replace undo
-
-// Test single file new output
-
-// test single file new output undo
-
-
-
-
-
-// Test directory loop replace
-
-// test directory loop replace undo
-
-// Test directory loop new output
-
-// test directory loop new output undo
