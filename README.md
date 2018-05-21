@@ -93,3 +93,11 @@ You are able to specify an output file to write the compiled CSS to. If you do n
 You can easily revert the CSS back to the original file by passing `-u` or `--undo`.
 
 `auto-comment-bracket input.scss -u -o output.scss`
+
+## Directory
+
+It can also loop through and process files in a directory or subdirectories. It will only run on files with a .css and .scss extension. You can use `-d` or `--directory` to tell it to loop. The input and output options should be the directory file path.
+
+Optionally, you can include `-r` or `--recursive` to go through subdirectories as well. It will attempt to preserve the folder structure if you specify an output folder.
+
+`auto-comment-bracket ./src/ -d -r -o ./dest/`
