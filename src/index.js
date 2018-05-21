@@ -10,7 +10,7 @@ var parseDirectory = require('./parseDirectory.js');
 
 program
 .arguments('<path>')
-.version('1.0.3', '-v, --version')
+.version('1.1.0', '-v, --version')
 .option('-o, --output <path>', 'The output path to be written')
 .option('-u, --undo', 'Remove comments added using this module')
 .option('-d, --directory', 'Loop through all files in directory')
