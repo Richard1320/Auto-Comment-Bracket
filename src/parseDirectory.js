@@ -5,6 +5,7 @@
 var fs       = require('fs');
 var parseFile = require('./parseFile.js');
 
+
 exports.loopDir = function(path, program) {
   fs.readdir( path, function( err, files ) {
     if( err ) {
@@ -41,24 +42,25 @@ exports.loopDir = function(path, program) {
           options.output = path + file;
         }
 
-        // Check if current item is a file
-        if (stats.isFile()) {
-          // Check if file is CSS or SCSS extension
-          let extension = filepath.split('.').pop().toLowerCase();
-          if (extension == 'css' || extension == 'scss') {
-            parseFile.processFile(filepath,options);
+        // Check if path does not match excluded files
+        if (!program.exclude || filepath.indexOf(program.exclude) == -1) {
+          // Check if current item is a file
+          if (stats.isFile()) {
+            // Check if file is CSS or SCSS extension
+            let extension = filepath.split('.').pop().toLowerCase();
+            if (extension == 'css' || extension == 'scss') {
+              parseFile.processFile(filepath,options);
+            }
           }
-          // console.log(extension);
-        }
 
 
-        // Check if current item is directory and recursive option is enabled
-        if (stats.isDirectory() && program.recursive) {
-          // console.log(options.output);
-          if (!fs.existsSync(options.output)){
-            fs.mkdirSync(options.output);
+          // Check if current item is directory and recursive option is enabled
+          if (stats.isDirectory() && program.recursive) {
+            if (!fs.existsSync(options.output)){
+              fs.mkdirSync(options.output);
+            }
+            exports.loopDir(filepath,options);
           }
-          exports.loopDir(filepath,options);
         }
 
 
