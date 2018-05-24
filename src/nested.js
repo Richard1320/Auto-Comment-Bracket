@@ -5,16 +5,18 @@
 var comments = require('./comments.js');
 
 exports.getNestedUntilClose = function(data,index,nestedArray,commentsArray) {
-  var nextOpen      = data.indexOf('{',index+1);
-  var nextClose     = data.indexOf('}',index+1);
-  var lastColon     = 0; // Last semicolon before selector start
-  var lastOpen      = 0; // Last opening bracket before selector start
-  var lastClose     = 0; // Last closing bracket before selector start
-  var selector      = '';
-  var selectorStart = 0; // Start index of nested selector
-  var cssObject     = {}; // Object to push into array
-  var currentCode   = ''; // Code up to current point in analyzed CSS
-  var commentStart  = 0; // Position of comment start
+  var nextOpen          = data.indexOf('{',index+1);
+  var nextClose         = data.indexOf('}',index+1);
+  var lastColon         = 0; // Last semicolon before selector start
+  var lastOpen          = 0; // Last opening bracket before selector start
+  var lastClose         = 0; // Last closing bracket before selector start
+  var selector          = '';
+  var selectorStart     = 0; // Start index of nested selector
+  var cssObject         = {}; // Object to push into array
+  var currentCode       = ''; // Code up to current point in analyzed CSS
+  var commentLineStart  = 0; // Position of last line comment start
+  var commentBlockStart = 0; // Position of last block comment start
+  var commentStart      = 0; // Position of last comment start
 
   // Keep looking if bracket is in array
   while (comments.checkRanges(nextClose,commentsArray)) {
@@ -40,13 +42,15 @@ exports.getNestedUntilClose = function(data,index,nestedArray,commentsArray) {
     selectorStart = Math.max(lastColon, lastOpen, lastClose) + 1;
 
     // Use previous close if close is inside a bracket
-    if (comments.checkRanges(selectorStart,commentsArray)) {
-      commentStart  = currentCode.lastIndexOf('/*');
-      currentCode   = data.substring(0, commentStart);
-      lastColon     = currentCode.lastIndexOf(';');
-      lastOpen      = currentCode.lastIndexOf('{');
-      lastClose     = currentCode.lastIndexOf('}');
-      selectorStart = Math.max(lastColon, lastOpen, lastClose) + 1;
+    while (comments.checkRanges(selectorStart,commentsArray)) {
+      commentBlockStart = currentCode.lastIndexOf('/*');
+      commentLineStart  = currentCode.lastIndexOf('//');
+      commentStart      = Math.max(commentBlockStart, commentLineStart);
+      currentCode       = data.substring(0, commentStart);
+      lastColon         = currentCode.lastIndexOf(';');
+      lastOpen          = currentCode.lastIndexOf('{');
+      lastClose         = currentCode.lastIndexOf('}');
+      selectorStart     = Math.max(lastColon, lastOpen, lastClose) + 1;
     }
 
     // Get selector

@@ -26,27 +26,6 @@ exports.removeComments = function(data,commentPrefix,commentSuffix) {
   }
   return data;
 }; // End remove comments
-exports.commentsArray = function(data) {
-  var commentPrefix       = '/*';
-  var commentSuffix       = '*/';
-  var commentSuffixLength = commentSuffix.length;
-  var commentStart        = data.indexOf(commentPrefix,commentStart);
-  var commentEnd          = -1;
-  var array               = [];
-  var obj                 = {};
-  while (commentStart > -1) {
-    commentEnd = data.indexOf(commentSuffix,commentStart) + commentSuffixLength;
-
-    obj = {
-      start: commentStart,
-      end: commentEnd,
-    };
-    array.push(obj);
-
-    commentStart = data.indexOf(commentPrefix,commentStart+1);
-  }
-  return array;
-}; // End comments array
 exports.checkRanges = function(number,ranges) {
   var x    = 0;
   var test = false;
@@ -59,3 +38,42 @@ exports.checkRanges = function(number,ranges) {
   }
   return test;
 }; // end check ranges
+exports.commentsArrayLoop = function(data,prefix,suffix,array) {
+  var suffixLength = suffix.length;
+  var commentStart = data.indexOf(prefix);
+  var commentEnd   = -1;
+  var obj          = {};
+
+  // Loop through block comments
+  while (commentStart > -1) {
+    // check if comment start is not inside an existing comment
+    if (!exports.checkRanges(commentStart,array)) {
+
+      commentEnd = data.indexOf(suffix,commentStart) + suffixLength;
+
+      obj = {
+        start: commentStart,
+        end: commentEnd,
+      };
+      array.push(obj);
+    }
+
+    commentStart = data.indexOf(prefix,commentStart+1);
+  }
+
+  return array;
+
+}; // End comments array loop
+
+
+exports.commentsArray = function(data) {
+  var array = [];
+
+  // Loop through block comments
+  array = exports.commentsArrayLoop(data,'/*','*/',array);
+
+  // Loop through line comments
+  array = exports.commentsArrayLoop(data,'//','\n',array);
+
+  return array;
+}; // End comments array
