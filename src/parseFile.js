@@ -57,6 +57,8 @@ exports.applyBrackets = function(file, output) {
 
       // Remove comments from previous executions
       data = comments.removeComments(data,' /* ACB: // ');
+      // Remove credit at top
+      data = comments.removeComments(data,'/* ACB: // This file has been commented by Auto-Comment-Bracket','\n');
 
       var commentsArray = comments.commentsArray(data);
       var nestedArray   = nested.getNestedUntilClose(data,0,[],commentsArray); // Get first set of items
@@ -95,15 +97,22 @@ exports.applyBrackets = function(file, output) {
       // Loop through & create new CSS file
       for(x = 0; x < cssArray.length; x++) {
         cssObject = cssArray[x];
+
+        // Skip if object is empty
+        if (!cssObject.selector) continue;
+
         comment = ' /* ACB: // '+ cssObject.selector +' */';
         // console.log(cssObject);
         data = data.splice(cssObject.end, 0, comment);
       }
+      // Add in credit at top
+      data = data.splice(0, 0, '/* ACB: // This file has been commented by Auto-Comment-Bracket - https://github.com/Richard1320/Auto-Comment-Bracket */ \n');
 
       // Overwrite original file if no output file specified
       if (!output) {
         output = file;
       }
+
 
       exports.writeFile(data,output);
     }
@@ -122,8 +131,10 @@ exports.undoFile = function(file, output) {
       if (!output) {
         output = file;
       }
+      // Remove credit at top
+      data = comments.removeComments(data,'/* ACB: // This file has been commented by Auto-Comment-Bracket','\n');
 
-      // Remove comemnts from previous executions
+      // Remove comments from previous executions
       data = comments.removeComments(data,' /* ACB: // ');
 
       exports.writeFile(data,output);

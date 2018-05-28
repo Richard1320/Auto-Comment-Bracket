@@ -4,6 +4,10 @@
 
 var comments = require('./comments.js');
 
+// Lock selector start position
+// Needs to be assigned outside as get nested function is called multiple times in a loop
+// var lockSelectorStart = false;
+
 exports.getNestedUntilClose = function(data,index,nestedArray,commentsArray) {
   var nextOpen          = data.indexOf('{',index+1);
   var nextClose         = data.indexOf('}',index+1);
@@ -32,10 +36,31 @@ exports.getNestedUntilClose = function(data,index,nestedArray,commentsArray) {
       continue;
     }
 
-    // Get last semicolon or open bracket for start current item
+    // If bracket is preceded by a hash symbol,
+    // move onto next item
+    // It is probably a sass function variable e.g. .block--#{$i}
+    if (data.charAt(nextOpen - 1) == '#') {
+      // Lock opening search start in order to grab the proper selector
+      // if (!lockSelectorStart) {
+      //   lockSelectorStart = nextOpen;
+      // }
+
+      // Push empty object to skip on opposite closing bracket
+      nestedArray.push({});
+
+      // Skip to next opening bracket
+      nextOpen = data.indexOf('{',nextOpen+1);
+      continue;
+    }
+
+    // Get last semicolon or open bracket before current open bracket
     // Check for opening bracket in case parent is empty
     // Must be assigned AFTER selector but BEFORE cssObject
-    currentCode   = data.substring(0, nextOpen);
+    currentCode = data.substring(0, nextOpen);
+    // if (lockSelectorStart) {
+    //   currentCode = data.substring(0, lockSelectorStart);
+    //   lockSelectorStart = false;
+    // }
     lastColon     = currentCode.lastIndexOf(';');
     lastOpen      = currentCode.lastIndexOf('{');
     lastClose     = currentCode.lastIndexOf('}');
@@ -61,6 +86,12 @@ exports.getNestedUntilClose = function(data,index,nestedArray,commentsArray) {
 
     // Remove double-slash comments
     selector = comments.removeComments(selector,'//','\n');
+
+    // Remove file imports
+    selector = comments.removeComments(selector,'@import',';');
+
+    // Remove SASS variable declarations
+    selector = comments.removeComments(selector,'$',';');
 
     // Remove line breaks
     selector = selector.replace(/(\r\n|\n|\r)/gm," ").trim();
