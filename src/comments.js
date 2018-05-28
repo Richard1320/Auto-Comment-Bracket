@@ -18,11 +18,18 @@ exports.removeComments = function(data,commentPrefix,commentSuffix) {
   }
   var commentSuffixLength = commentSuffix.length;
   var commentStart        = data.indexOf(commentPrefix,commentStart);
-  var commentEnd          = -1;
-  while (commentStart > -1) {
-    commentEnd   = data.indexOf(commentSuffix,commentStart) + commentSuffixLength;
-    data         = data.cut(commentStart,commentEnd);
+  var commentEnd          = data.indexOf(commentSuffix,commentStart) + commentSuffixLength;
+
+  // While comment start is found
+  // And comment end is found
+  // And comment end point is after start point
+  while (commentStart > -1 && commentEnd > -1 && commentEnd > commentStart) {
+    // Cut current comment
+    data = data.cut(commentStart,commentEnd);
+
+    // Get next comment start
     commentStart = data.indexOf(commentPrefix);
+    commentEnd   = data.indexOf(commentSuffix,commentStart) + commentSuffixLength;
   }
   return data;
 }; // End remove comments
