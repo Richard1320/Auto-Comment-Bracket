@@ -100,4 +100,10 @@ It can also loop through and process files in a directory or subdirectories. It 
 
 Optionally, you can include `-r` or `--recursive` to go through subdirectories as well. It will attempt to preserve the folder structure if you specify an output folder.
 
-`auto-comment-bracket ./src/ -d -r -o ./dest/`
+`auto-comment-bracket ./src/ -d -r -o ./dist/`
+
+## Exclude
+
+If the program is breaking one or more of your sass files, you can use `-e` or `--exclude` followed by the filepath and it will attempt to match that file and ignore it. It currently uses a simple string match so wildcards are not necessary and will not work.
+
+`auto-comment-bracket ./src/ -d -r -e src/mixins/`
