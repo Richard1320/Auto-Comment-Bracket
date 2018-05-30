@@ -1,0 +1,67 @@
+/* ACB: // This file has been commented by Auto-Comment-Bracket - https://github.com/Richard1320/Auto-Comment-Bracket */ 
+@mixin caret-down {
+  border-top: $caret-width solid;
+  border-right: $caret-width solid transparent;
+  border-bottom: 0;
+  border-left: $caret-width solid transparent;
+} /* ACB: // @mixin caret-down */
+
+@mixin caret-up {
+  border-top: 0;
+  border-right: $caret-width solid transparent;
+  border-bottom: $caret-width solid;
+  border-left: $caret-width solid transparent;
+} /* ACB: // @mixin caret-up */
+
+@mixin caret-right {
+  border-top: $caret-width solid transparent;
+  border-right: 0;
+  border-bottom: $caret-width solid transparent;
+  border-left: $caret-width solid;
+} /* ACB: // @mixin caret-right */
+
+@mixin caret-left {
+  border-top: $caret-width solid transparent;
+  border-right: $caret-width solid;
+  border-bottom: $caret-width solid transparent;
+} /* ACB: // @mixin caret-left */
+
+@mixin caret($direction: down) {
+  @if $enable-caret {
+    &::after {
+      display: inline-block;
+      width: 0;
+      height: 0;
+      margin-left: $caret-width * .85;
+      vertical-align: $caret-width * .85;
+      content: "";
+      @if $direction == down {
+        @include caret-down;
+      } /* ACB: // @if $direction == down */ @else if $direction == up {
+        @include caret-up;
+      } /* ACB: // @else if $direction == up */ @else if $direction == right {
+        @include caret-right;
+      } /* ACB: // @else if $direction == right */
+    } /* ACB: // &::after */
+
+    @if $direction == left {
+      &::after {
+        display: none;
+      } /* ACB: // &::after */
+
+      &::before {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        margin-right: $caret-width * .85;
+        vertical-align: $caret-width * .85;
+        content: "";
+        @include caret-left;
+      } /* ACB: // &::before */
+    } /* ACB: // @if $direction == left */
+
+    &:empty::after {
+      margin-left: 0;
+    } /* ACB: // &:empty::after */
+  } /* ACB: // @if $enable-caret */
+} /* ACB: // @mixin caret($direction: down) */

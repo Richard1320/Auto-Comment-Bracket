@@ -1,0 +1,6 @@
+/* ACB: // This file has been commented by Auto-Comment-Bracket - https://github.com/Richard1320/Auto-Comment-Bracket */ 
+@mixin box-shadow($shadow...) {
+  @if $enable-shadows {
+    box-shadow: $shadow;
+  } /* ACB: // @if $enable-shadows */
+} /* ACB: // @mixin box-shadow($shadow...) */

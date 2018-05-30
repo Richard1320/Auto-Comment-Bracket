@@ -1,0 +1,35 @@
+/* ACB: // This file has been commented by Auto-Comment-Bracket - https://github.com/Richard1320/Auto-Comment-Bracket */ 
+@keyframes progress-bar-stripes {
+  from { background-position: $progress-height 0; } /* ACB: // from */
+  to { background-position: 0 0; } /* ACB: // to */
+} /* ACB: // @keyframes progress-bar-stripes */
+
+.progress {
+  display: flex;
+  height: $progress-height;
+  overflow: hidden; // force rounded corners by cropping it
+  font-size: $progress-font-size;
+  background-color: $progress-bg;
+  @include border-radius($progress-border-radius);
+  @include box-shadow($progress-box-shadow);
+} /* ACB: // .progress */
+
+.progress-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: $progress-bar-color;
+  text-align: center;
+  white-space: nowrap;
+  background-color: $progress-bar-bg;
+  @include transition($progress-bar-transition);
+} /* ACB: // .progress-bar */
+
+.progress-bar-striped {
+  @include gradient-striped();
+  background-size: $progress-height $progress-height;
+} /* ACB: // .progress-bar-striped */
+
+.progress-bar-animated {
+  animation: progress-bar-stripes $progress-bar-animation-timing;
+} /* ACB: // .progress-bar-animated */

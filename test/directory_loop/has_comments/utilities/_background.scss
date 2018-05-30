@@ -1,0 +1,20 @@
+/* ACB: // This file has been commented by Auto-Comment-Bracket - https://github.com/Richard1320/Auto-Comment-Bracket */ 
+// stylelint-disable declaration-no-important
+
+@each $color, $value in $theme-colors {
+  @include bg-variant(".bg-#{$color}", $value);
+} /* ACB: // @each $color, $value in $theme-colors */
+
+@if $enable-gradients {
+  @each $color, $value in $theme-colors {
+    @include bg-gradient-variant(".bg-gradient-#{$color}", $value);
+  } /* ACB: // @each $color, $value in $theme-colors */
+} /* ACB: // @if $enable-gradients */
+
+.bg-white {
+  background-color: $white !important;
+} /* ACB: // .bg-white */
+
+.bg-transparent {
+  background-color: transparent !important;
+} /* ACB: // .bg-transparent */

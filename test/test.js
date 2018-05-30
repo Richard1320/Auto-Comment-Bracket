@@ -102,8 +102,8 @@ describe('Auto Comment Bracket', function() {
     // Test directory loop replace
     it('should return overwritten file with applied comments', function (done) {
       let testPath    = './test/directory_loop/src/';
-      let outputFile  = './test/directory_loop/src/style.scss';
-      let compareFile = './test/single_file/file_has_comments.scss';
+      let outputFile  = './test/directory_loop/src/_print.scss';
+      let compareFile = './test/directory_loop/has_comments/_print.scss';
       let command     = 'auto-comment-bracket '+ testPath +' -d';
       runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
     });
@@ -111,8 +111,8 @@ describe('Auto Comment Bracket', function() {
     // test directory loop replace undo
     it('should return overwritten file back to its original state', function (done) {
       let testPath    = './test/directory_loop/src/';
-      let outputFile  = './test/directory_loop/src/style.scss';
-      let compareFile = './test/single_file/file_no_comments.scss';
+      let outputFile  = './test/directory_loop/src/_print.scss';
+      let compareFile = './test/directory_loop/no_comments/_print.scss';
       let command     = 'auto-comment-bracket '+ testPath +' -d -u';
       runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
     });
@@ -120,9 +120,9 @@ describe('Auto Comment Bracket', function() {
     // Test directory loop new output
     it('should return a new file with applied comments', function (done) {
       let testPath    = './test/directory_loop/src/';
-      let outputFile  = './test/directory_loop/dest/style.scss';
-      let outputPath  = './test/directory_loop/dest/';
-      let compareFile = './test/single_file/file_has_comments.scss';
+      let outputFile  = './test/directory_loop/dist/_print.scss';
+      let outputPath  = './test/directory_loop/dist/';
+      let compareFile = './test/directory_loop/has_comments/_print.scss';
       let command     = 'auto-comment-bracket '+ testPath +' -d -o '+ outputPath;
       runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
     });
@@ -130,9 +130,9 @@ describe('Auto Comment Bracket', function() {
     // test directory loop new output undo
     it('should return a new file back to its original state', function (done) {
       let testPath    = './test/directory_loop/src/';
-      let outputFile  = './test/directory_loop/dest/style.scss';
-      let outputPath  = './test/directory_loop/dest/';
-      let compareFile = './test/single_file/file_no_comments.scss';
+      let outputFile  = './test/directory_loop/dist/_print.scss';
+      let outputPath  = './test/directory_loop/dist/';
+      let compareFile = './test/directory_loop/no_comments/_print.scss';
       let command     = 'auto-comment-bracket '+ testPath +' -d -u -o '+ outputPath;
       runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
     });
@@ -142,8 +142,8 @@ describe('Auto Comment Bracket', function() {
     // Test directory loop replace
     it('should return overwritten file with applied comments', function (done) {
       let testPath    = './test/directory_loop/src/';
-      let outputFile  = './test/directory_loop/src/folder/subdir2/subdir.scss';
-      let compareFile = './test/single_file/file_has_comments.scss';
+      let outputFile  = './test/directory_loop/src/mixins/_buttons.scss';
+      let compareFile = './test/directory_loop/has_comments/mixins/_buttons.scss';
       let command     = 'auto-comment-bracket '+ testPath +' -d -r';
       runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
     });
@@ -151,8 +151,8 @@ describe('Auto Comment Bracket', function() {
     // test directory loop replace undo
     it('should return overwritten file back to its original state', function (done) {
       let testPath    = './test/directory_loop/src/';
-      let outputFile  = './test/directory_loop/src/folder/subdir2/subdir.scss';
-      let compareFile = './test/single_file/file_no_comments.scss';
+      let outputFile  = './test/directory_loop/src/mixins/_buttons.scss';
+      let compareFile = './test/directory_loop/no_comments/mixins/_buttons.scss';
       let command     = 'auto-comment-bracket '+ testPath +' -d -r -u';
       runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
     });
@@ -160,9 +160,9 @@ describe('Auto Comment Bracket', function() {
     // Test directory loop new output
     it('should return a new file with applied comments', function (done) {
       let testPath    = './test/directory_loop/src/';
-      let outputFile  = './test/directory_loop/dest/folder/subdir2/subdir.scss';
-      let outputPath  = './test/directory_loop/dest/';
-      let compareFile = './test/single_file/file_has_comments.scss';
+      let outputFile  = './test/directory_loop/dist/mixins/_buttons.scss';
+      let outputPath  = './test/directory_loop/dist/';
+      let compareFile = './test/directory_loop/has_comments/mixins/_buttons.scss';
       let command     = 'auto-comment-bracket '+ testPath +' -d -r -o '+ outputPath;
       runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
     });
@@ -170,9 +170,9 @@ describe('Auto Comment Bracket', function() {
     // test directory loop new output undo
     it('should return a new file back to its original state', function (done) {
       let testPath    = './test/directory_loop/src/';
-      let outputFile  = './test/directory_loop/dest/folder/subdir2/subdir.scss';
-      let outputPath  = './test/directory_loop/dest/';
-      let compareFile = './test/single_file/file_no_comments.scss';
+      let outputFile  = './test/directory_loop/dist/mixins/_buttons.scss';
+      let outputPath  = './test/directory_loop/dist/';
+      let compareFile = './test/directory_loop/no_comments/mixins/_buttons.scss';
       let command     = 'auto-comment-bracket '+ testPath +' -d -r -u -o '+ outputPath;
       runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
     });

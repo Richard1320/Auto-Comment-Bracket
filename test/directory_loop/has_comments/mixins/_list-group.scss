@@ -1,0 +1,22 @@
+/* ACB: // This file has been commented by Auto-Comment-Bracket - https://github.com/Richard1320/Auto-Comment-Bracket */ 
+// List Groups
+
+@mixin list-group-item-variant($state, $background, $color) {
+  .list-group-item-#{$state} {
+    color: $color;
+    background-color: $background;
+
+    &.list-group-item-action {
+      @include hover-focus {
+        color: $color;
+        background-color: darken($background, 5%);
+      } /* ACB: // @include hover-focus */
+
+      &.active {
+        color: $white;
+        background-color: $color;
+        border-color: $color;
+      } /* ACB: // &.active */
+    } /* ACB: // &.list-group-item-action */
+  }
+} /* ACB: // @mixin list-group-item-variant($state, $background, $color) */

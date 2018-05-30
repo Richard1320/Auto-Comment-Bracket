@@ -1,0 +1,189 @@
+/* ACB: // This file has been commented by Auto-Comment-Bracket - https://github.com/Richard1320/Auto-Comment-Bracket */ 
+//
+// Basic Bootstrap table
+//
+
+.table {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: $spacer;
+  background-color: $table-bg; // Reset for nesting within parents with `background-color`.
+
+  th,
+  td {
+    padding: $table-cell-padding;
+    vertical-align: top;
+    border-top: $table-border-width solid $table-border-color;
+  } /* ACB: // th, td */
+
+  thead th {
+    vertical-align: bottom;
+    border-bottom: (2 * $table-border-width) solid $table-border-color;
+  } /* ACB: // thead th */
+
+  tbody + tbody {
+    border-top: (2 * $table-border-width) solid $table-border-color;
+  } /* ACB: // tbody + tbody */
+
+  .table {
+    background-color: $body-bg;
+  } /* ACB: // .table */
+} /* ACB: // .table */
+
+
+//
+// Condensed table w/ half padding
+//
+
+.table-sm {
+  th,
+  td {
+    padding: $table-cell-padding-sm;
+  } /* ACB: // th, td */
+} /* ACB: // .table-sm */
+
+
+// Border versions
+//
+// Add or remove borders all around the table and between all the columns.
+
+.table-bordered {
+  border: $table-border-width solid $table-border-color;
+
+  th,
+  td {
+    border: $table-border-width solid $table-border-color;
+  } /* ACB: // th, td */
+
+  thead {
+    th,
+    td {
+      border-bottom-width: (2 * $table-border-width);
+    } /* ACB: // th, td */
+  } /* ACB: // thead */
+} /* ACB: // .table-bordered */
+
+.table-borderless {
+  th,
+  td,
+  thead th,
+  tbody + tbody {
+    border: 0;
+  } /* ACB: // th, td, thead th, tbody + tbody */
+} /* ACB: // .table-borderless */
+
+// Zebra-striping
+//
+// Default zebra-stripe styles (alternating gray and transparent backgrounds)
+
+.table-striped {
+  tbody tr:nth-of-type(#{$table-striped-order}) {
+    background-color: $table-accent-bg;
+  } /* ACB: // ) */
+} /* ACB: // .table-striped */
+
+
+// Hover effect
+//
+// Placed here since it has to come after the potential zebra striping
+
+.table-hover {
+  tbody tr {
+    @include hover {
+      background-color: $table-hover-bg;
+    } /* ACB: // @include hover */
+  } /* ACB: // tbody tr */
+} /* ACB: // .table-hover */
+
+
+// Table backgrounds
+//
+// Exact selectors below required to override `.table-striped` and prevent
+// inheritance to nested tables.
+
+@each $color, $value in $theme-colors {
+  @include table-row-variant($color, theme-color-level($color, -9));
+} /* ACB: // @each $color, $value in $theme-colors */
+
+@include table-row-variant(active, $table-active-bg);
+
+
+// Dark styles
+//
+// Same table markup, but inverted color scheme: dark background and light text.
+
+// stylelint-disable-next-line no-duplicate-selectors
+.table {
+  .thead-dark {
+    th {
+      color: $table-dark-color;
+      background-color: $table-dark-bg;
+      border-color: $table-dark-border-color;
+    } /* ACB: // th */
+  } /* ACB: // .thead-dark */
+
+  .thead-light {
+    th {
+      color: $table-head-color;
+      background-color: $table-head-bg;
+      border-color: $table-border-color;
+    } /* ACB: // th */
+  } /* ACB: // .thead-light */
+} /* ACB: // .table */
+
+.table-dark {
+  color: $table-dark-color;
+  background-color: $table-dark-bg;
+
+  th,
+  td,
+  thead th {
+    border-color: $table-dark-border-color;
+  } /* ACB: // th, td, thead th */
+
+  &.table-bordered {
+    border: 0;
+  } /* ACB: // &.table-bordered */
+
+  &.table-striped {
+    tbody tr:nth-of-type(odd) {
+      background-color: $table-dark-accent-bg;
+    } /* ACB: // tbody tr:nth-of-type(odd) */
+  } /* ACB: // &.table-striped */
+
+  &.table-hover {
+    tbody tr {
+      @include hover {
+        background-color: $table-dark-hover-bg;
+      } /* ACB: // @include hover */
+    } /* ACB: // tbody tr */
+  } /* ACB: // &.table-hover */
+} /* ACB: // .table-dark */
+
+
+// Responsive tables
+//
+// Generate series of `.table-responsive-*` classes for configuring the screen
+// size of where your table will overflow.
+
+.table-responsive {
+  @each $breakpoint in map-keys($grid-breakpoints) {
+    $next: breakpoint-next($breakpoint, $grid-breakpoints);
+    $infix: breakpoint-infix($next, $grid-breakpoints);
+
+    &#{$infix} {
+      @include media-breakpoint-down($breakpoint) {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: -ms-autohiding-scrollbar; // See https://github.com/twbs/bootstrap/pull/10057
+
+        // Prevent double border on horizontal scroll due to use of `display: block;`
+        > .table-bordered {
+          border: 0;
+        } /* ACB: // > .table-bordered */
+      } /* ACB: // @include media-breakpoint-down($breakpoint) */
+    }
+  } /* ACB: // @each $breakpoint in map-keys($grid-breakpoints) */
+} /* ACB: // .table-responsive */

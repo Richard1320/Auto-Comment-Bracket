@@ -1,0 +1,8 @@
+/* ACB: // This file has been commented by Auto-Comment-Bracket - https://github.com/Richard1320/Auto-Comment-Bracket */ 
+@mixin clearfix() {
+  &::after {
+    display: block;
+    clear: both;
+    content: "";
+  } /* ACB: // &::after */
+} /* ACB: // @mixin clearfix() */

@@ -1,0 +1,10 @@
+/* ACB: // This file has been commented by Auto-Comment-Bracket - https://github.com/Richard1320/Auto-Comment-Bracket */ 
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+    .float#{$infix}-left  { @include float-left; } /* ACB: // -left */
+    .float#{$infix}-right { @include float-right; } /* ACB: // -right */
+    .float#{$infix}-none  { @include float-none; } /* ACB: // -none */
+  } /* ACB: // @include media-breakpoint-up($breakpoint) */
+} /* ACB: // @each $breakpoint in map-keys($grid-breakpoints) */

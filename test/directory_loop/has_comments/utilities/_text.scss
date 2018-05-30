@@ -1,0 +1,59 @@
+/* ACB: // This file has been commented by Auto-Comment-Bracket - https://github.com/Richard1320/Auto-Comment-Bracket */ 
+// stylelint-disable declaration-no-important
+
+//
+// Text
+//
+
+.text-monospace { font-family: $font-family-monospace; } /* ACB: // .text-monospace */
+
+// Alignment
+
+.text-justify  { text-align: justify !important; } /* ACB: // .text-justify */
+.text-nowrap   { white-space: nowrap !important; } /* ACB: // .text-nowrap */
+.text-truncate { @include text-truncate; } /* ACB: // .text-truncate */
+
+// Responsive alignment
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+    .text#{$infix}-left   { text-align: left !important; } /* ACB: // -left */
+    .text#{$infix}-right  { text-align: right !important; } /* ACB: // -right */
+    .text#{$infix}-center { text-align: center !important; } /* ACB: // -center */
+  } /* ACB: // @include media-breakpoint-up($breakpoint) */
+} /* ACB: // @each $breakpoint in map-keys($grid-breakpoints) */
+
+// Transformation
+
+.text-lowercase  { text-transform: lowercase !important; } /* ACB: // .text-lowercase */
+.text-uppercase  { text-transform: uppercase !important; } /* ACB: // .text-uppercase */
+.text-capitalize { text-transform: capitalize !important; } /* ACB: // .text-capitalize */
+
+// Weight and italics
+
+.font-weight-light  { font-weight: $font-weight-light !important; } /* ACB: // .font-weight-light */
+.font-weight-normal { font-weight: $font-weight-normal !important; } /* ACB: // .font-weight-normal */
+.font-weight-bold   { font-weight: $font-weight-bold !important; } /* ACB: // .font-weight-bold */
+.font-italic        { font-style: italic !important; } /* ACB: // .font-italic */
+
+// Contextual colors
+
+.text-white { color: $white !important; } /* ACB: // .text-white */
+
+@each $color, $value in $theme-colors {
+  @include text-emphasis-variant(".text-#{$color}", $value);
+} /* ACB: // @each $color, $value in $theme-colors */
+
+.text-body { color: $body-color !important; } /* ACB: // .text-body */
+.text-muted { color: $text-muted !important; } /* ACB: // .text-muted */
+
+.text-black-50 { color: rgba($black, .5) !important; } /* ACB: // .text-black-50 */
+.text-white-50 { color: rgba($white, .5) !important; } /* ACB: // .text-white-50 */
+
+// Misc
+
+.text-hide {
+  @include text-hide($ignore-warning: true);
+} /* ACB: // .text-hide */

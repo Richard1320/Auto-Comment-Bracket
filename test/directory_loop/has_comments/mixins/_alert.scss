@@ -1,0 +1,14 @@
+/* ACB: // This file has been commented by Auto-Comment-Bracket - https://github.com/Richard1320/Auto-Comment-Bracket */ 
+@mixin alert-variant($background, $border, $color) {
+  color: $color;
+  @include gradient-bg($background);
+  border-color: $border;
+
+  hr {
+    border-top-color: darken($border, 5%);
+  } /* ACB: // hr */
+
+  .alert-link {
+    color: darken($color, 10%);
+  } /* ACB: // .alert-link */
+} /* ACB: // @mixin alert-variant($background, $border, $color) */

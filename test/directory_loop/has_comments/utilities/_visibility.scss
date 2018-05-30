@@ -1,0 +1,12 @@
+/* ACB: // This file has been commented by Auto-Comment-Bracket - https://github.com/Richard1320/Auto-Comment-Bracket */ 
+//
+// Visibility utilities
+//
+
+.visible {
+  @include invisible(visible);
+} /* ACB: // .visible */
+
+.invisible {
+  @include invisible(hidden);
+} /* ACB: // .invisible */

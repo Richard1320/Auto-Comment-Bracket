@@ -1,0 +1,13 @@
+/* ACB: // This file has been commented by Auto-Comment-Bracket - https://github.com/Richard1320/Auto-Comment-Bracket */ 
+// stylelint-disable declaration-no-important
+
+// Width and height
+
+@each $prop, $abbrev in (width: w, height: h) {
+  @each $size, $length in $sizes {
+    .#{$abbrev}-#{$size} { #{$prop}: $length !important; }
+  } /* ACB: // @each $size, $length in $sizes */
+} /* ACB: // @each $prop, $abbrev in (width: w, height: h) */
+
+.mw-100 { max-width: 100% !important; } /* ACB: // .mw-100 */
+.mh-100 { max-height: 100% !important; } /* ACB: // .mh-100 */

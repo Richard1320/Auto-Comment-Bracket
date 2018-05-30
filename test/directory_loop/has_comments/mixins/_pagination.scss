@@ -1,0 +1,23 @@
+/* ACB: // This file has been commented by Auto-Comment-Bracket - https://github.com/Richard1320/Auto-Comment-Bracket */ 
+// Pagination
+
+@mixin pagination-size($padding-y, $padding-x, $font-size, $line-height, $border-radius) {
+  .page-link {
+    padding: $padding-y $padding-x;
+    font-size: $font-size;
+    line-height: $line-height;
+  } /* ACB: // .page-link */
+
+  .page-item {
+    &:first-child {
+      .page-link {
+        @include border-left-radius($border-radius);
+      } /* ACB: // .page-link */
+    } /* ACB: // &:first-child */
+    &:last-child {
+      .page-link {
+        @include border-right-radius($border-radius);
+      } /* ACB: // .page-link */
+    } /* ACB: // &:last-child */
+  } /* ACB: // .page-item */
+} /* ACB: // @mixin pagination-size($padding-y, $padding-x, $font-size, $line-height, $border-radius) */

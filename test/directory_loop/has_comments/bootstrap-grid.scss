@@ -1,0 +1,33 @@
+/* ACB: // This file has been commented by Auto-Comment-Bracket - https://github.com/Richard1320/Auto-Comment-Bracket */ 
+/*!
+ * Bootstrap Grid v4.1.1 (https://getbootstrap.com/)
+ * Copyright 2011-2018 The Bootstrap Authors
+ * Copyright 2011-2018 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+
+@at-root {
+  @-ms-viewport { width: device-width; } /* ACB: // @-ms-viewport */ // stylelint-disable-line at-rule-no-vendor-prefix
+} /* ACB: // @at-root */
+
+html {
+  box-sizing: border-box;
+  -ms-overflow-style: scrollbar;
+} /* ACB: // html */
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+} /* ACB: // *, *::before, *::after */
+
+@import "functions";
+@import "variables";
+
+@import "mixins/breakpoints";
+@import "mixins/grid-framework";
+@import "mixins/grid";
+
+@import "grid";
+@import "utilities/display";
+@import "utilities/flex";

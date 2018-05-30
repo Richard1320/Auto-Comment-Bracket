@@ -1,0 +1,36 @@
+/* ACB: // This file has been commented by Auto-Comment-Bracket - https://github.com/Richard1320/Auto-Comment-Bracket */ 
+// Single side border-radius
+
+@mixin border-radius($radius: $border-radius) {
+  @if $enable-rounded {
+    border-radius: $radius;
+  } /* ACB: // @if $enable-rounded */
+} /* ACB: // @mixin border-radius($radius: $border-radius) */
+
+@mixin border-top-radius($radius) {
+  @if $enable-rounded {
+    border-top-left-radius: $radius;
+    border-top-right-radius: $radius;
+  } /* ACB: // @if $enable-rounded */
+} /* ACB: // @mixin border-top-radius($radius) */
+
+@mixin border-right-radius($radius) {
+  @if $enable-rounded {
+    border-top-right-radius: $radius;
+    border-bottom-right-radius: $radius;
+  } /* ACB: // @if $enable-rounded */
+} /* ACB: // @mixin border-right-radius($radius) */
+
+@mixin border-bottom-radius($radius) {
+  @if $enable-rounded {
+    border-bottom-right-radius: $radius;
+    border-bottom-left-radius: $radius;
+  } /* ACB: // @if $enable-rounded */
+} /* ACB: // @mixin border-bottom-radius($radius) */
+
+@mixin border-left-radius($radius) {
+  @if $enable-rounded {
+    border-top-left-radius: $radius;
+    border-bottom-left-radius: $radius;
+  } /* ACB: // @if $enable-rounded */
+} /* ACB: // @mixin border-left-radius($radius) */
