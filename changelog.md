@@ -1,3 +1,7 @@
+2018-06-07
+**1.1.2**
+- Add potential ending for final line comment
+
 2018-05-29
 **1.1.1**
 - Add exclude path matching for directory loops
