@@ -64,7 +64,7 @@ exports.commentsArrayLoop = function(data,prefix,suffix,array) {
       };
       array.push(obj);
     }
-
+    // Get next comment start
     commentStart = data.indexOf(prefix,commentStart+1);
   }
 
@@ -75,6 +75,9 @@ exports.commentsArrayLoop = function(data,prefix,suffix,array) {
 
 exports.commentsArray = function(data) {
   var array = [];
+
+  // Add a new line to data. If last line is a line comment, it won't find the "end" and won't be added to the comment array.
+  data = data + '\n';
 
   // Loop through block comments
   array = exports.commentsArrayLoop(data,'/*','*/',array);
