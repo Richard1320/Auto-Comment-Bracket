@@ -16,8 +16,7 @@
   "author": "Richard Hung <richardhung111@gmail.com> (http://www.magicmediamuse.com)",
   "license": "ISC",
   "dependencies": {
-    "commander": "^2.9.0",
-    "fs": "0.0.1-security"
+    "commander": "^2.9.0"
   },
   "devDependencies": {
     "mocha": "^5.1.1"
