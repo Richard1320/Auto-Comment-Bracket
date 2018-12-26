@@ -1,12 +1,12 @@
 # Welcome to Auto Comment Bracket
 
-SASS is probably the best thing to happen to CSS in a long time. It finally allowed us to store variables and have limited programming ability with mixin functions. It's also very useful for giving your styling code structure with its nested hierarchy. One common problem with large SASS files is that with a hierarchy multiple levels deep, it becomes difficult to tell which selector each bracket is actually closing.
+SCSS is probably the best thing to happen to CSS in a long time. It finally allowed us to store variables and have limited programming ability with mixin functions. It's also very useful for giving your styling code structure with its nested hierarchy. One common problem with large SASS files is that with a hierarchy multiple levels deep, it becomes difficult to tell which selector each bracket is actually closing.
 
-Auto Comment Bracket is a tool to mark closing brackets in your CSS and SASS files.
+Auto Comment Bracket is a tool to mark closing brackets in your CSS and SCSS files.
 
 ## Before
 
-```sass
+```scss
 .level-1-2 {
   .level-2-1 {
     margin:250px;
@@ -43,7 +43,7 @@ Auto Comment Bracket is a tool to mark closing brackets in your CSS and SASS fil
 
 ## After
 
-```sass
+```scss
 .level-1-2 {
   .level-2-1 {
     margin:250px;
