@@ -4,12 +4,11 @@
 
 if (!String.prototype.cut) {
   String.prototype.cut = function(i0, i1) {
-    return this.substring(0, i0)+this.substring(i1);
-  }
+    return this.substring(0, i0) + this.substring(i1);
+  };
 }
-
 // Remove comments from string
-exports.removeComments = function(data,commentPrefix,commentSuffix) {
+exports.removeComments = function(data, commentPrefix, commentSuffix) {
   if (!commentPrefix) {
     commentPrefix = '/*';
   }
@@ -17,24 +16,44 @@ exports.removeComments = function(data,commentPrefix,commentSuffix) {
     commentSuffix = '*/';
   }
   var commentSuffixLength = commentSuffix.length;
-  var commentStart        = data.indexOf(commentPrefix,commentStart);
-  var commentEnd          = data.indexOf(commentSuffix,commentStart) + commentSuffixLength;
+  var commentStart = data.indexOf(commentPrefix, commentStart);
+  var commentEnd =
+    data.indexOf(commentSuffix, commentStart) + commentSuffixLength;
 
   // While comment start is found
   // And comment end is found
   // And comment end point is after start point
   while (commentStart > -1 && commentEnd > -1 && commentEnd > commentStart) {
     // Cut current comment
-    data = data.cut(commentStart,commentEnd);
+    data = data.cut(commentStart, commentEnd);
 
     // Get next comment start
     commentStart = data.indexOf(commentPrefix);
-    commentEnd   = data.indexOf(commentSuffix,commentStart) + commentSuffixLength;
+    commentEnd =
+      data.indexOf(commentSuffix, commentStart) + commentSuffixLength;
   }
   return data;
 }; // End remove comments
-exports.checkRanges = function(number,ranges) {
-  var x    = 0;
+
+exports.removePreviousComments = function(data) {
+  // Remove credit at top
+  data = exports.removeComments(
+    data,
+    '/* ACB: // This file has been commented by Auto-Comment-Bracket',
+    '\n'
+  );
+
+  // Remove ACB comments from previous executions
+  data = exports.removeComments(data, ' /* ACB: // ');
+
+  // Remove ACB comments without a space in front
+  data = exports.removeComments(data, '/* ACB: // ');
+
+  return data;
+};
+
+exports.checkRanges = function(number, ranges) {
+  var x = 0;
   var test = false;
   for (x = 0; x < ranges.length; x++) {
     if (number > ranges[x].start && number < ranges[x].end) {
@@ -45,18 +64,17 @@ exports.checkRanges = function(number,ranges) {
   }
   return test;
 }; // end check ranges
-exports.commentsArrayLoop = function(data,prefix,suffix,array) {
+exports.commentsArrayLoop = function(data, prefix, suffix, array) {
   var suffixLength = suffix.length;
   var commentStart = data.indexOf(prefix);
-  var commentEnd   = -1;
-  var obj          = {};
+  var commentEnd = -1;
+  var obj = {};
 
   // Loop through block comments
   while (commentStart > -1) {
     // check if comment start is not inside an existing comment
-    if (!exports.checkRanges(commentStart,array)) {
-
-      commentEnd = data.indexOf(suffix,commentStart) + suffixLength;
+    if (!exports.checkRanges(commentStart, array)) {
+      commentEnd = data.indexOf(suffix, commentStart) + suffixLength;
 
       obj = {
         start: commentStart,
@@ -65,13 +83,11 @@ exports.commentsArrayLoop = function(data,prefix,suffix,array) {
       array.push(obj);
     }
     // Get next comment start
-    commentStart = data.indexOf(prefix,commentStart+1);
+    commentStart = data.indexOf(prefix, commentStart + 1);
   }
 
   return array;
-
 }; // End comments array loop
-
 
 exports.commentsArray = function(data) {
   var array = [];
@@ -80,10 +96,10 @@ exports.commentsArray = function(data) {
   data = data + '\n';
 
   // Loop through block comments
-  array = exports.commentsArrayLoop(data,'/*','*/',array);
+  array = exports.commentsArrayLoop(data, '/*', '*/', array);
 
   // Loop through line comments
-  array = exports.commentsArrayLoop(data,'//','\n',array);
+  array = exports.commentsArrayLoop(data, '//', '\n', array);
 
   return array;
 }; // End comments array
