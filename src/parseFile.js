@@ -2,25 +2,27 @@
 
 'use strict';
 
-var fs       = require('fs');
+var fs = require('fs');
 var comments = require('./comments.js');
-var nested   = require('./nested.js');
+var nested = require('./nested.js');
 
 if (!String.prototype.splice) {
   /**
-  * {JSDoc}
-  *
-  * The splice() method changes the content of a string by removing a range of
-  * characters and/or adding new characters.
-  *
-  * @this {String}
-  * @param {number} start Index at which to start changing the string.
-  * @param {number} delCount An integer indicating the number of old chars to remove.
-  * @param {string} newSubStr The String that is spliced in.
-  * @return {string} A new string with the spliced substring.
-  */
+   * {JSDoc}
+   *
+   * The splice() method changes the content of a string by removing a range of
+   * characters and/or adding new characters.
+   *
+   * @this {String}
+   * @param {number} start Index at which to start changing the string.
+   * @param {number} delCount An integer indicating the number of old chars to remove.
+   * @param {string} newSubStr The String that is spliced in.
+   * @return {string} A new string with the spliced substring.
+   */
   String.prototype.splice = function(start, delCount, newSubStr) {
-    return this.slice(0, start) + newSubStr + this.slice(start + Math.abs(delCount));
+    return (
+      this.slice(0, start) + newSubStr + this.slice(start + Math.abs(delCount))
+    );
   };
 }
 
@@ -38,56 +40,55 @@ exports.writeFile = function(data, output) {
       fs.write(fd, buffer, 0, buffer.length, null, function(err) {
         if (err) throw 'error writing file: ' + err;
         fs.close(fd, function() {
-          console.log('file written to '+ output);
-        })
+          console.log('file written to ' + output);
+        });
       });
     });
   } else {
     console.log(data);
   }
-
 }; // End write file
 exports.applyBrackets = function(file, output) {
-
   // Open & read file
-  fs.readFile(file, 'utf8', function (err,data) {
+  fs.readFile(file, 'utf8', function(err, data) {
     if (err) {
       return console.log(err);
     } else {
-
-      // Remove comments from previous executions
-      data = comments.removeComments(data,' /* ACB: // ');
-      // Remove credit at top
-      data = comments.removeComments(data,'/* ACB: // This file has been commented by Auto-Comment-Bracket','\n');
+      // Remove previous comments from data
+      data = comments.removePreviousComments(data);
 
       var commentsArray = comments.commentsArray(data);
-      var nestedArray   = nested.getNestedUntilClose(data,0,[],commentsArray); // Get first set of items
-      var nextClose     = data.indexOf('}'); // First closing bracket check
-      var cssObject     = {}; // Object to push into array
-      var cssArray      = []; // Array holding all selectors
-      var comment       = '';
-      var x             = 0;
+      var nestedArray = nested.getNestedUntilClose(data, 0, [], commentsArray); // Get first set of items
+      var nextClose = data.indexOf('}'); // First closing bracket check
+      var cssObject = {}; // Object to push into array
+      var cssArray = []; // Array holding all selectors
+      var comment = '';
+      var x = 0;
 
       // Keep looking if bracket is in array
-      while (comments.checkRanges(nextClose,commentsArray)) {
-        nextClose = data.indexOf('}',nextClose+1);
+      while (comments.checkRanges(nextClose, commentsArray)) {
+        nextClose = data.indexOf('}', nextClose + 1);
       }
 
       // Loop through all closing brackets
       while (nextClose > -1) {
-
         // If bracket is inside a comment, move onto next item
-        if (comments.checkRanges(nextClose,commentsArray)) {
-          nextClose = data.indexOf('}',nextClose+1);
+        if (comments.checkRanges(nextClose, commentsArray)) {
+          nextClose = data.indexOf('}', nextClose + 1);
           // nestedArray = nested.getNestedUntilClose(data,nextClose,nestedArray,commentsArray);
           continue;
         }
         cssObject = nestedArray.pop();
-        cssObject.end = nextClose+1;
+        cssObject.end = nextClose + 1;
 
         cssArray.push(cssObject);
-        nestedArray = nested.getNestedUntilClose(data,nextClose+1,nestedArray,commentsArray);
-        nextClose = data.indexOf('}',nextClose+1);
+        nestedArray = nested.getNestedUntilClose(
+          data,
+          nextClose + 1,
+          nestedArray,
+          commentsArray
+        );
+        nextClose = data.indexOf('}', nextClose + 1);
         // console.log(nestedArray);
       }
 
@@ -95,35 +96,35 @@ exports.applyBrackets = function(file, output) {
       cssArray.reverse();
 
       // Loop through & create new CSS file
-      for(x = 0; x < cssArray.length; x++) {
+      for (x = 0; x < cssArray.length; x++) {
         cssObject = cssArray[x];
 
         // Skip if object is empty
         if (!cssObject.selector) continue;
 
-        comment = ' /* ACB: // '+ cssObject.selector +' */';
+        comment = ' /* ACB: // ' + cssObject.selector + ' */';
         // console.log(cssObject);
         data = data.splice(cssObject.end, 0, comment);
       }
       // Add in credit at top
-      data = data.splice(0, 0, '/* ACB: // This file has been commented by Auto-Comment-Bracket - https://github.com/Richard1320/Auto-Comment-Bracket */ \n');
+      data = data.splice(
+        0,
+        0,
+        '/* ACB: // This file has been commented by Auto-Comment-Bracket - https://github.com/Richard1320/Auto-Comment-Bracket */ \n'
+      );
 
       // Overwrite original file if no output file specified
       if (!output) {
         output = file;
       }
 
-
-      exports.writeFile(data,output);
+      exports.writeFile(data, output);
     }
-
   });
-
 }; // End apply brackets
 exports.undoFile = function(file, output) {
-
   // Open & read file
-  fs.readFile(file, 'utf8', function (err,data) {
+  fs.readFile(file, 'utf8', function(err, data) {
     if (err) {
       return console.log(err);
     } else {
@@ -131,24 +132,19 @@ exports.undoFile = function(file, output) {
       if (!output) {
         output = file;
       }
-      // Remove credit at top
-      data = comments.removeComments(data,'/* ACB: // This file has been commented by Auto-Comment-Bracket','\n');
 
-      // Remove comments from previous executions
-      data = comments.removeComments(data,' /* ACB: // ');
+      // Remove previous comments from data
+      data = comments.removePreviousComments(data);
 
-      exports.writeFile(data,output);
-
+      exports.writeFile(data, output);
     }
-
   });
-
 }; // End process file
 
 exports.processFile = function(file, program) {
   if (program.undo) {
-    exports.undoFile(file,program.output);
+    exports.undoFile(file, program.output);
   } else {
-    exports.applyBrackets(file,program.output);
+    exports.applyBrackets(file, program.output);
   }
 }; // End process file
