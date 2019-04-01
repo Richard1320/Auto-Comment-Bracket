@@ -27,17 +27,15 @@ if (!String.prototype.splice) {
 }
 
 exports.writeFile = function(data, output) {
-  var buffer = '';
 
   if (output) {
-    buffer = new Buffer(data);
 
     fs.open(output, 'w', function(err, fd) {
       if (err) {
         throw 'error opening file: ' + err;
       }
 
-      fs.write(fd, buffer, 0, buffer.length, null, function(err) {
+      fs.writeFile(fd, data, function(err) {
         if (err) throw 'error writing file: ' + err;
         fs.close(fd, function() {
           console.log('file written to ' + output);
