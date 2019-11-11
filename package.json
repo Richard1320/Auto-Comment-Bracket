@@ -6,10 +6,18 @@
   "types": "types/index.d.ts",
   "scripts": {
     "dev": "tsc -w",
-    "prepare": "npm run build",
+    "prepublish": "npm run build",
     "build": "rm -rf dist && tsc",
     "test": "npm run build && ts-mocha ./test/test.ts"
   },
+  "keywords": [
+    "css",
+    "scss",
+    "developer-tools",
+    "bracket",
+    "brackets",
+    "mark-closing-brackets"
+  ],
   "bin": {
     "auto-comment-bracket": "./dist/index.js"
   },
