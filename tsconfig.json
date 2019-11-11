@@ -1,34 +1,21 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
-    "target": "es6",
+    "target": "es5",
+    "module": "commonjs",
     "lib": [
       "es6",
-      "dom",
-      "es2016",
-      "es2017"
+      "es2015",
+      "dom"
     ],
+    "declaration": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": true,
+    "types": [
+      "node"
+    ],
+    "esModuleInterop": true,
     "sourceMap": true,
-    "allowJs": false,
-    "jsx": "react",
-    "allowSyntheticDefaultImports": true,
-    "declaration": false,
-    "moduleResolution": "node",
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "esModuleInterop": true
-  },
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "node_modules",
-    "build"
-  ]
+    "resolveJsonModule": true
+  }
 }
