@@ -2,12 +2,16 @@
   "name": "auto-comment-bracket",
   "version": "1.1.4",
   "description": "Add comments to closing CSS brackets to distinguish what is actually closing. Nested selectors in SCSS can be multiple levels deep which makes it hard to figure out what the parent selector is.",
-  "main": "./src/index.js",
+  "main": "./dist/index.js",
+  "types": "types/index.d.ts",
   "scripts": {
+    "dev": "tsc -w",
+    "prepare": "npm run build",
+    "build": "rm -rf dist && tsc",
     "test": "mocha"
   },
   "bin": {
-    "auto-comment-bracket": "./src/index.js"
+    "auto-comment-bracket": "./dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +23,9 @@
     "commander": "^4.0.0"
   },
   "devDependencies": {
-    "mocha": "^6.2.2"
+    "@types/mocha": "^5.2.7",
+    "mocha": "^6.2.2",
+    "ts-mocha": "^6.0.0",
+    "typescript": "^3.7.2"
   }
 }
