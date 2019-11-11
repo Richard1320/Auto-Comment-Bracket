@@ -64,7 +64,7 @@ describe('Auto Comment Bracket', function() {
       let testPath    = './test/single_file/file_test.scss';
       let outputFile  = './test/single_file/file_test.scss';
       let compareFile = './test/single_file/file_has_comments.scss';
-      let command     = 'auto-comment-bracket '+ testPath;
+      let command = './dist/index.js ' + testPath;
       runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
     });
 
@@ -73,7 +73,7 @@ describe('Auto Comment Bracket', function() {
       let testPath    = './test/single_file/file_test.scss';
       let outputFile  = './test/single_file/file_test.scss';
       let compareFile = './test/single_file/file_no_comments.scss';
-      let command     = 'auto-comment-bracket '+ testPath +' -u';
+      let command = './dist/index.js ' + testPath + ' -u';
       runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
     });
 
@@ -82,7 +82,7 @@ describe('Auto Comment Bracket', function() {
       let testPath    = './test/single_file/file_test.scss';
       let outputFile  = './test/single_file/file_output.scss';
       let compareFile = './test/single_file/file_has_comments.scss';
-      let command     = 'auto-comment-bracket '+ testPath +' -o '+ outputFile;
+      let command = './dist/index.js ' + testPath + ' -o ' + outputFile;
       runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
     });
 
@@ -91,7 +91,7 @@ describe('Auto Comment Bracket', function() {
       let testPath    = './test/single_file/file_test.scss';
       let outputFile  = './test/single_file/file_output.scss';
       let compareFile = './test/single_file/file_no_comments.scss';
-      let command     = 'auto-comment-bracket '+ testPath +' -u -o '+ outputFile;
+      let command = './dist/index.js ' + testPath + ' -u -o ' + outputFile;
       runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
     });
   }); // End file test
@@ -104,7 +104,7 @@ describe('Auto Comment Bracket', function() {
       let testPath    = './test/directory_loop/src/';
       let outputFile  = './test/directory_loop/src/_print.scss';
       let compareFile = './test/directory_loop/has_comments/_print.scss';
-      let command     = 'auto-comment-bracket '+ testPath +' -d';
+      let command = './dist/index.js ' + testPath + ' -d';
       runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
     });
 
@@ -113,7 +113,7 @@ describe('Auto Comment Bracket', function() {
       let testPath    = './test/directory_loop/src/';
       let outputFile  = './test/directory_loop/src/_print.scss';
       let compareFile = './test/directory_loop/no_comments/_print.scss';
-      let command     = 'auto-comment-bracket '+ testPath +' -d -u';
+      let command = './dist/index.js ' + testPath + ' -d -u';
       runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
     });
 
@@ -123,7 +123,7 @@ describe('Auto Comment Bracket', function() {
       let outputFile  = './test/directory_loop/dist/_print.scss';
       let outputPath  = './test/directory_loop/dist/';
       let compareFile = './test/directory_loop/has_comments/_print.scss';
-      let command     = 'auto-comment-bracket '+ testPath +' -d -o '+ outputPath;
+      let command = './dist/index.js ' + testPath + ' -d -o ' + outputPath;
       runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
     });
 
@@ -133,7 +133,7 @@ describe('Auto Comment Bracket', function() {
       let outputFile  = './test/directory_loop/dist/_print.scss';
       let outputPath  = './test/directory_loop/dist/';
       let compareFile = './test/directory_loop/no_comments/_print.scss';
-      let command     = 'auto-comment-bracket '+ testPath +' -d -u -o '+ outputPath;
+      let command = './dist/index.js ' + testPath + ' -d -u -o ' + outputPath;
       runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
     });
   });
@@ -144,7 +144,7 @@ describe('Auto Comment Bracket', function() {
       let testPath    = './test/directory_loop/src/';
       let outputFile  = './test/directory_loop/src/mixins/_buttons.scss';
       let compareFile = './test/directory_loop/has_comments/mixins/_buttons.scss';
-      let command     = 'auto-comment-bracket '+ testPath +' -d -r';
+      let command = './dist/index.js ' + testPath + ' -d -r';
       runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
     });
 
@@ -153,7 +153,7 @@ describe('Auto Comment Bracket', function() {
       let testPath    = './test/directory_loop/src/';
       let outputFile  = './test/directory_loop/src/mixins/_buttons.scss';
       let compareFile = './test/directory_loop/no_comments/mixins/_buttons.scss';
-      let command     = 'auto-comment-bracket '+ testPath +' -d -r -u';
+      let command = './dist/index.js ' + testPath + ' -d -r -u';
       runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
     });
 
@@ -163,7 +163,7 @@ describe('Auto Comment Bracket', function() {
       let outputFile  = './test/directory_loop/dist/mixins/_buttons.scss';
       let outputPath  = './test/directory_loop/dist/';
       let compareFile = './test/directory_loop/has_comments/mixins/_buttons.scss';
-      let command     = 'auto-comment-bracket '+ testPath +' -d -r -o '+ outputPath;
+      let command = './dist/index.js ' + testPath + ' -d -r -o ' + outputPath;
       runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
     });
 
@@ -173,7 +173,7 @@ describe('Auto Comment Bracket', function() {
       let outputFile  = './test/directory_loop/dist/mixins/_buttons.scss';
       let outputPath  = './test/directory_loop/dist/';
       let compareFile = './test/directory_loop/no_comments/mixins/_buttons.scss';
-      let command     = 'auto-comment-bracket '+ testPath +' -d -r -u -o '+ outputPath;
+      let command = './dist/index.js ' + testPath + ' -d -r -u -o ' + outputPath;
       runCommandAndtestPath(done,command,testPath,compareFile,outputFile);
     });
   });
