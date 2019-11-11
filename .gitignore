@@ -3,3 +3,4 @@
 node_modules
 tests/output.scss
 npm-debug.log
+.idea/
