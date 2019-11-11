@@ -1,4 +1,4 @@
-# Welcome to Auto Comment Bracket
+# Automatically mark each closing bracket with its selector in CSS and SCSS files
 
 SCSS is probably the best thing to happen to CSS in a long time. It finally allowed us to store variables and have limited programming ability with mixin functions. It's also very useful for giving your styling code structure with its nested hierarchy. One common problem with large SASS files is that with a hierarchy multiple levels deep, it becomes difficult to tell which selector each bracket is actually closing.
 
