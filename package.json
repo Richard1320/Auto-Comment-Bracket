@@ -6,7 +6,7 @@
   "types": "types/index.d.ts",
   "scripts": {
     "dev": "tsc -w",
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "build": "rm -rf dist && tsc",
     "test": "npm run build && ts-mocha ./test/test.ts"
   },
