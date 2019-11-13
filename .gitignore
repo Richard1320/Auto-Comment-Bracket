@@ -1,7 +1,6 @@
 # Ignore Rules
 
 node_modules
-tests/output.scss
 npm-debug.log
 .idea/
 test/**/dist/**/*.scss
