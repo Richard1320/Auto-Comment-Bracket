@@ -6,7 +6,7 @@ import {processFile} from "./parseFile";
 
 program
 	.arguments('<path>')
-	.version('1.1.4', '-v, --version')
+	.version('1.1.5', '-v, --version')
 	.option('-o, --output <path>', 'The output path to be written')
 	.option('-e, --exclude <path>', 'Excluded file path from directory loop')
 	.option('-u, --undo', 'Remove comments added using this module')
