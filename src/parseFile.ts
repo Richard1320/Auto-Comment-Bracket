@@ -2,7 +2,7 @@ import fs from "fs";
 import {checkRanges, commentsArray, removePreviousComments} from "./comments";
 import {getNestedUntilClose} from "./nested";
 import {ICommentPosition, ICssObject} from "../types";
-import {Command} from "commander";
+import {CommanderStatic} from "commander";
 
 /**
  * {JSDoc}
@@ -132,7 +132,7 @@ export function undoFile(file: string, output: string): void {
 
 }
 
-export function processFile(file: string, program: Command) {
+export function processFile(file: string, program: CommanderStatic) {
 	if (program.undo) {
 		undoFile(file, program.output);
 	} else {

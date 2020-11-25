@@ -1,8 +1,8 @@
 import fs from "fs";
-import {Command} from "commander";
+import {CommanderStatic} from "commander";
 import {processFile} from "./parseFile";
 
-export function loopDir(path: string, program: Command) {
+export function loopDir(path: string, program: CommanderStatic) {
 	try {
 		const files = fs.readdirSync(path);
 
